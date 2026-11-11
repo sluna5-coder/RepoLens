@@ -42,9 +42,9 @@ class Validators {
     return null;
   }
 
-  /// Campo obligatorio genérico (login).
-  static String? required(String? value, String field) {
-    if (value == null || value.trim().isEmpty) return '$field es obligatorio';
+  /// Campo obligatorio genérico (login): devuelve [message] si está vacío.
+  static String? required(String? value, String message) {
+    if (value == null || value.trim().isEmpty) return message;
     return null;
   }
 
