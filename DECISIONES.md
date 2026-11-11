@@ -15,7 +15,7 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 - `.gitignore` con secretos excluidos; commits incrementales en español; sin tokens ni claves en el repositorio.
 
 ### No verificado
-- **La app no se ha instalado ni ejecutado en un teléfono o emulador.** La APK compila, pero su funcionamiento real (red, SQLite de Android, almacenamiento seguro, aspecto visual) solo está respaldado por las pruebas automatizadas, que simulan la API con `MockClient`.
+- **Probado en emulador, no en teléfono físico.** La APK se instaló en un emulador Android (`Medium_Phone`, API 37, x86_64) y se comprobó: pantalla de login, entrada con el usuario de prueba, pantalla de Inicio y un análisis real de `dart-lang/http` contra la API de GitHub (salud 100). El resto de pantallas (historial, favoritos, comparación, perfil, errores de red) no se recorrió en el emulador.
 - Sin prueba automatizada: cambio de tema, pantalla de comparación y guardado del token en `flutter_secure_storage` (casos 22 a 24 de la matriz).
 - Los diagramas Mermaid del documento técnico no se renderizaron para revisarlos.
 
