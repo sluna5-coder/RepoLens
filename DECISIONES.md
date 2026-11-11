@@ -15,7 +15,10 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 - Evidencia de pruebas en `Entrega/Evidencias/Pruebas/resultado_flutter_test.txt` y `resultado_flutter_analyze.txt` (corresponden a la corrida de 53 pruebas; hay que regenerarlas con las 61).
 
 ### Pendiente (para continuar)
-1. **APK release**: la compilación quedó corriendo en segundo plano y **no se confirmó su resultado**. Al retomar: comprobar `build/app/outputs/flutter-apk/app-release.apk`; si existe, copiarla a `Entrega/Aplicacion/RepoLens.apk`. Si no, volver a compilar (ver "Problemas de entorno").
+1. **APK release: todavía NO se genera.** El último intento (desde la unidad `R:`, 4 min) pasó el error de sockets pero falló en:
+   `Execution failed for task ':shared_preferences_android:compileReleaseKotlin'` →
+   `Could not close incremental caches in R:\build\shared_preferences_android\kotlin\compileReleaseKotlin\cacheable\caches-jvm\jvm\kotlin`.
+   Es un fallo conocido de la compilación incremental de Kotlin cuando el proyecto y la caché de pub están en unidades distintas (`R:` y `C:`). Siguiente intento, sin probar aún: agregar `kotlin.incremental=false` a `android/gradle.properties`, o mover el proyecto a una carpeta de ruta corta en `C:` y compilar ahí sin `subst`. Al lograrlo, copiar `build/app/outputs/flutter-apk/app-release.apk` a `Entrega/Aplicacion/RepoLens.apk`.
 2. **Documentación** (nada de esto está escrito todavía):
    - `README.md` del proyecto (sigue el de plantilla de Flutter).
    - `Entrega/Documentacion/DocumentoTecnico.md` (19 apartados).
