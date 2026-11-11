@@ -1,0 +1,55 @@
+00:00 +0: test/unit/analyzer_test.dart
+00:00 +0: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +1: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +2: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +3: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +4: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +5: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +6: test/unit/github_service_test.dart: GithubService con MockClient fetchAll descarga y parsea todos los endpoints
+00:00 +7: test/unit/auth_test.dart: AuthService registra, guarda el hash (no la contraseña) e inicia sesión
+00:00 +8: test/unit/analyzer_test.dart: Puntuación de salud repo completo obtiene 100
+00:00 +9: test/unit/analyzer_test.dart: Puntuación de salud repo completo obtiene 100
+00:00 +10: test/unit/auth_test.dart: AuthService no permite emails duplicados
+00:00 +11: test/unit/auth_test.dart: AuthService no permite emails duplicados
+00:00 +12: test/unit/github_service_test.dart: GithubService con MockClient 404 lanza NotFoundException
+00:00 +13: test/unit/analyzer_test.dart: Puntuación de salud cada criterio resta sus puntos: sin licencia y commit viejo = 65
+00:00 +14: test/unit/analyzer_test.dart: Puntuación de salud cada criterio resta sus puntos: sin licencia y commit viejo = 65
+00:00 +15: test/unit/github_service_test.dart: GithubService con MockClient 403 sin peticiones restantes lanza RateLimitException con la hora de reinicio
+00:00 +16: test/unit/github_service_test.dart: GithubService con MockClient 403 sin peticiones restantes lanza RateLimitException con la hora de reinicio
+00:00 +17: test/unit/github_service_test.dart: GithubService con MockClient 403 sin peticiones restantes lanza RateLimitException con la hora de reinicio
+00:00 +18: test/unit/github_service_test.dart: GithubService con MockClient 429 también lanza RateLimitException
+00:00 +19: test/unit/github_service_test.dart: GithubService con MockClient sin conexión (SocketException) lanza NoConnectionException
+00:00 +20: test/unit/github_service_test.dart: GithubService con MockClient una respuesta lenta lanza RequestTimeoutException
+00:00 +21: test/unit/github_service_test.dart: GithubService con MockClient 409 en commits (repo vacío) lanza EmptyRepoException
+00:00 +22: test/unit/github_service_test.dart: GithubService con MockClient JSON inesperado lanza UnexpectedJsonException
+00:00 +23: test/unit/github_service_test.dart: GithubService con MockClient un repo sin README devuelve null en vez de fallar
+00:00 +24: test/unit/models_test.dart: Parseo de modelos RepoInfo.fromJson lee todos los campos
+00:00 +25: test/unit/models_test.dart: Parseo de modelos RepoInfo tolera licencia y descripción nulas, y toJson es reversible
+00:00 +26: test/unit/models_test.dart: Parseo de modelos LanguageStat.listFromApi calcula porcentajes y ordena
+00:00 +27: test/unit/models_test.dart: Parseo de modelos CommitInfo.fromJson lee autor, fecha y título
+00:00 +28: test/unit/models_test.dart: Parseo de modelos Contributor y RepoFile se parsean y serializan
+00:00 +29: test/unit/models_test.dart: Parseo de modelos User, Favorite y HistoryEntry van y vuelven de una fila SQLite
+00:00 +30: test/unit/models_test.dart: Parseo de modelos AnalysisResult conserva todo al serializar (snapshot de historial)
+00:00 +31: test/unit/validators_test.dart: Parser de URL de repositorio acepta https://github.com/owner/repo
+00:00 +32: test/unit/validators_test.dart: Parser de URL de repositorio acepta la URL sin protocolo
+00:00 +33: test/unit/validators_test.dart: Parser de URL de repositorio acepta la variante con .git
+00:00 +34: test/unit/validators_test.dart: Parser de URL de repositorio acepta la variante con /tree/...
+00:00 +35: test/unit/validators_test.dart: Parser de URL de repositorio ignora espacios, www y barra final
+00:00 +36: test/unit/validators_test.dart: Parser de URL de repositorio rechaza URLs inválidas
+00:00 +37: test/unit/validators_test.dart: Parser de URL de repositorio el validador del campo devuelve mensaje en URL inválida o vacía
+00:00 +38: test/unit/validators_test.dart: Validaciones de registro y login email inválido se rechaza y válido se acepta
+00:00 +39: test/unit/validators_test.dart: Validaciones de registro y login contraseña débil se rechaza
+00:00 +40: test/unit/validators_test.dart: Validaciones de registro y login la confirmación debe coincidir
+00:00 +41: test/unit/validators_test.dart: Validaciones de registro y login nombre y campos obligatorios
+00:00 +42: test/unit/validators_test.dart: Validaciones de registro y login la nota de favorito admite máximo 300 caracteres
+00:00 +43: test/widget/url_form_test.dart: Formulario de URL URL inválida muestra error y no envía
+00:01 +44: test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:01 +45: test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:01 +46: test/widget/url_form_test.dart: Formulario de URL URL válida se envía sin errores
+00:02 +47: test/widget/auth_screens_test.dart: Pantalla de login contraseña incorrecta muestra un mensaje claro
+00:02 +48: test/widget/auth_screens_test.dart: Pantalla de login contraseña incorrecta muestra un mensaje claro
+00:02 +49: test/widget/auth_screens_test.dart: Pantalla de login login correcto con el usuario demo navega a la app
+00:02 +50: test/widget/auth_screens_test.dart: Pantalla de registro valida nombre, email, contraseña débil y confirmación
+00:02 +51: test/widget/auth_screens_test.dart: Pantalla de registro no permite registrar un email duplicado
+00:02 +52: test/widget/auth_screens_test.dart: Pantalla de registro registro válido crea la cuenta y entra a la app
+00:03 +53: All tests passed!

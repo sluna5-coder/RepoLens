@@ -191,13 +191,15 @@ class _SummaryTab extends StatelessWidget {
             const SizedBox(height: 12),
             // LayoutBuilder: 2 columnas en teléfono, 4 en tableta.
             LayoutBuilder(
-              builder: (context, constraints) => GridView.count(
-                crossAxisCount: constraints.maxWidth >= 600 ? 4 : 2,
+              builder: (context, constraints) => GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: constraints.maxWidth >= 600 ? 4 : 2,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  mainAxisExtent: 112,
+                ),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 1.5,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
                 children: [
                   StatTile(
                       icon: Icons.star, label: 'Estrellas', value: Fmt.compact(repo.stars)),

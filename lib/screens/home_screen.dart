@@ -92,13 +92,16 @@ class HomeScreen extends StatelessWidget {
               LayoutBuilder(
                 builder: (context, constraints) {
                   final columns = constraints.maxWidth >= 600 ? 4 : 2;
-                  return GridView.count(
-                    crossAxisCount: columns,
+                  return GridView(
+                    // Alto fijo por tarjeta: evita desbordes con textos grandes.
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      mainAxisExtent: 148,
+                    ),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    childAspectRatio: 1.15,
                     children: [
                       for (final (icon, title, subtitle, onTap) in actions)
                         Card(
