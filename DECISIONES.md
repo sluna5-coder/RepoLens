@@ -2,32 +2,27 @@
 
 Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 
-## Estado al pausar (2026-11-11)
+## Estado final (2026-11-11)
 
 ### Terminado y verificado
-- Proyecto Flutter 3.47.6 / Dart 3.13.5 creado (solo plataforma Android), paquete `app.repolens.repolens`.
+- Proyecto Flutter 3.47.6 / Dart 3.13.5 (solo plataforma Android), paquete `app.repolens.repolens`.
 - Código completo: `core/`, `models/`, `services/`, `data/`, `providers/`, `screens/`, `widgets/`.
-- `flutter analyze`: **sin problemas** ("No issues found").
-- `flutter test`: **61 pruebas, todas pasan** (unitarias, de widget y de integración con SQLite real vía `sqflite_common_ffi`).
-- Icono propio generado (`assets/icon/`) y copiado a `android/app/src/main/res/` en todas las densidades, con icono adaptativo.
-- Nombre "RepoLens" y permiso INTERNET en `AndroidManifest.xml`.
-- `.gitignore` con secretos excluidos. Commits incrementales en español.
-- Evidencia de pruebas en `Entrega/Evidencias/Pruebas/resultado_flutter_test.txt` y `resultado_flutter_analyze.txt` (corresponden a la corrida de 53 pruebas; hay que regenerarlas con las 61).
+- `flutter analyze`: **No issues found.**
+- `flutter test`: **61 pruebas, todas aprobadas** (unitarias, de widget y de integración con SQLite real vía `sqflite_common_ffi`). Salida guardada en `Entrega/Evidencias/Pruebas/`.
+- **APK release generada**: `flutter build apk --release` terminó bien (52.8 MB). Copia en `Entrega/Aplicacion/RepoLens.apk`.
+- Icono propio generado con `dart run flutter_launcher_icons`, nombre "RepoLens" y permiso INTERNET.
+- Documentación: `README.md`, `Entrega/Documentacion/DocumentoTecnico.md` (19 apartados), matriz de pruebas, bitácora, `GUIA_DEFENSA.md`, `GUION_VIDEO.md` y `Entrega/README.txt`.
+- `.gitignore` con secretos excluidos; commits incrementales en español; sin tokens ni claves en el repositorio.
 
-### Pendiente (para continuar)
-1. **APK release: todavía NO se genera.** El último intento (desde la unidad `R:`, 4 min) pasó el error de sockets pero falló en:
-   `Execution failed for task ':shared_preferences_android:compileReleaseKotlin'` →
-   `Could not close incremental caches in R:\build\shared_preferences_android\kotlin\compileReleaseKotlin\cacheable\caches-jvm\jvm\kotlin`.
-   Es un fallo conocido de la compilación incremental de Kotlin cuando el proyecto y la caché de pub están en unidades distintas (`R:` y `C:`). Siguiente intento, sin probar aún: agregar `kotlin.incremental=false` a `android/gradle.properties`, o mover el proyecto a una carpeta de ruta corta en `C:` y compilar ahí sin `subst`. Al lograrlo, copiar `build/app/outputs/flutter-apk/app-release.apk` a `Entrega/Aplicacion/RepoLens.apk`.
-2. **Documentación** (nada de esto está escrito todavía):
-   - `README.md` del proyecto (sigue el de plantilla de Flutter).
-   - `Entrega/Documentacion/DocumentoTecnico.md` (19 apartados).
-   - `Entrega/Evidencias/Pruebas/MatrizPruebas.md` y los `README.md` de `Capturas/`, `Pruebas/`, `EvidenciasAPI/`.
-   - `Entrega/Bitacora/BitacoraDesarrollo.md`.
-   - `GUIA_DEFENSA.md`, `GUION_VIDEO.md`, `Entrega/README.txt`.
-3. Regenerar la evidencia de pruebas con las 61 pruebas.
-4. Verificación final del checklist y resumen.
-5. La app **no se ha ejecutado en un dispositivo o emulador**: la interfaz solo está verificada por las pruebas de widget.
+### No verificado
+- **La app no se ha instalado ni ejecutado en un teléfono o emulador.** La APK compila, pero su funcionamiento real (red, SQLite de Android, almacenamiento seguro, aspecto visual) solo está respaldado por las pruebas automatizadas, que simulan la API con `MockClient`.
+- Sin prueba automatizada: cambio de tema, pantalla de comparación y guardado del token en `flutter_secure_storage` (casos 22 a 24 de la matriz).
+- Los diagramas Mermaid del documento técnico no se renderizaron para revisarlos.
+
+### Pendiente para el autor
+- Probar la APK en el teléfono, tomar las capturas y grabar el video.
+- Llenar los marcadores `[NOMBRE_EQUIPO]`, `[INTEGRANTES]`, `[ASIGNATURA]` y `[FECHA]`.
+- Corregir `git config user.email` (hoy es `tu-correo@ejemplo.com`) y subir a GitHub.
 
 ## Decisiones de diseño
 - **Plataforma**: solo Android (`flutter create --platforms android`), porque la entrega es una APK.
@@ -47,16 +42,18 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 - **Imágenes del README**: solo se cargan las `http(s)`; las que fallan (SVG, rutas relativas) se ocultan.
 - **Pruebas de base de datos**: se agregó `sqflite_common_ffi` como dependencia de desarrollo para probar los repositorios contra SQLite real.
 - **`Validators.required`** recibe el mensaje completo, para respetar el género ("La contraseña es obligatoria").
+- **Firma de la APK**: se usa la firma de depuración que trae la plantilla de Flutter. Sirve para instalar y evaluar; para publicar en una tienda haría falta una llave propia.
+- **APK fuera de Git**: `Entrega/Aplicacion/*.apk` está en `.gitignore` porque pesa unos 53 MB. Hay que adjuntarla aparte en la entrega o subirla como *Release* en GitHub.
+- **Guías**: `GUIA_DEFENSA.md` y `GUION_VIDEO.md` están en la raíz y copiadas en `Entrega/Documentacion/`.
+- **Bitácora**: los "prompts reales" son los cinco mensajes que el autor envió en la sesión; no se inventó ninguno.
 
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
-   - Solución que funcionó con `gradlew help`: definir antes de compilar
-     `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`
-     (se creó la carpeta `C:\Users\Colibecas\.udtmp` para esto; se puede borrar al terminar).
-2. **`dart run flutter_launcher_icons` falla**: `Failed to canonicalize path ... OS error (122)`. La ruta del proyecto es demasiado larga para Windows. La configuración quedó en `pubspec.yaml`, pero los iconos se generaron con un script de PowerShell (`System.Drawing`) a los mismos destinos. En una carpeta de ruta corta el comando debería funcionar; no se comprobó.
-3. **Unidad `R:`**: se creó con `subst R: <carpeta del proyecto>` para compilar desde una ruta corta. Es temporal; se quita con `subst R: /d`.
-4. **Desborde de 10 px** en las tarjetas de Inicio y de estadísticas en pantallas anchas: lo detectó la prueba de navegación. Se corrigió usando alto fijo (`mainAxisExtent`) en las cuadrículas.
-5. El `git config user.email` de esta máquina es `tu-correo@ejemplo.com` (valor de plantilla): conviene corregirlo antes de subir a GitHub.
+   - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.
+2. **`dart run flutter_launcher_icons` fallaba**: `Failed to canonicalize path ... OS error (122)`. La ruta de la carpeta temporal donde empezó el proyecto era demasiado larga para Windows. En `Documentos\RepoLens` el comando funcionó.
+3. **Kotlin: `Could not close incremental caches in R:\build\shared_preferences_android\...`**. Ocurrió al compilar desde una unidad virtual (`subst R:`) creada para acortar la ruta. La unidad se quitó (`subst R: /d`) y la compilación desde `Documentos\RepoLens` terminó bien, sin tocar `gradle.properties`.
+4. **Desborde de 10 px** en las tarjetas de Inicio y de estadísticas en pantallas anchas: lo detectó la prueba de navegación. Se corrigió con alto fijo (`mainAxisExtent`) en las cuadrículas.
+5. **Traslado del proyecto**: la copia automática a `Documentos\RepoLens` quedó incompleta; se completó copiando el historial de Git y restaurando los archivos (`git reset --hard`), con los mismos 11 commits.
 
 ## Comando de compilación
 ```
