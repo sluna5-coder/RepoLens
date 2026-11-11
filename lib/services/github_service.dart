@@ -85,17 +85,18 @@ class GithubService {
   /// GET /repos/{owner}/{repo}/readme: decodifica el base64 a texto Markdown.
   /// Devuelve `null` si el repo no tiene README (404).
   Future<String?> getReadme(String fullName) async {
+    final dynamic json;
     try {
-      final json = await _get('/repos/$fullName/readme');
-      return _parse(() {
-        final content = (json as Map<String, dynamic>)['content'] as String;
-        // GitHub parte el base64 en líneas: se quitan los saltos antes de decodificar.
-        return utf8.decode(base64.decode(content.replaceAll(RegExp(r'\s'), '')),
-            allowMalformed: true);
-      });
+      json = await _get('/repos/$fullName/readme');
     } on NotFoundException {
       return null;
     }
+    return _parse<String>(() {
+      final content = (json as Map<String, dynamic>)['content'] as String;
+      // GitHub parte el base64 en líneas: se quitan los saltos antes de decodificar.
+      return utf8.decode(base64.decode(content.replaceAll(RegExp(r'\s'), '')),
+          allowMalformed: true);
+    });
   }
 
   /// Descarga todo lo necesario para el informe. Primero el repo (si no existe

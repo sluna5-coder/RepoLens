@@ -18,14 +18,11 @@ enum AnalysisStatus { idle, loading, success, error }
 /// consulta la API, calcula el informe y lo guarda en caché e historial.
 class AnalysisProvider extends ChangeNotifier {
   AnalysisProvider({
-    required GithubService github,
-    required CacheRepository cache,
-    required HistoryRepository history,
-    required ConnectivityService connectivity,
-  })  : _github = github,
-        _cache = cache,
-        _history = history,
-        _connectivity = connectivity;
+    required this._github,
+    required this._cache,
+    required this._history,
+    required this._connectivity,
+  });
 
   final GithubService _github;
   final CacheRepository _cache;

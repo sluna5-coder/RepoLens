@@ -1,0 +1,535 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
+
+import '../core/constants.dart';
+import '../core/theme.dart';
+import '../core/utils.dart';
+import '../core/validators.dart';
+import '../models/analysis_result.dart';
+import '../providers/auth_provider.dart';
+import '../providers/favorites_provider.dart';
+import '../services/analyzer.dart';
+import '../widgets/common.dart';
+import '../widgets/state_views.dart';
+
+/// Pide una nota (máx. 300 caracteres) en un diálogo. Devuelve `null` si se
+/// cancela. Se usa al agregar un favorito y al editar su nota.
+Future<String?> askNote(BuildContext context, {String initial = '', required String title}) {
+  final controller = TextEditingController(text: initial);
+  final formKey = GlobalKey<FormState>();
+  return showDialog<String>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Form(
+        key: formKey,
+        child: TextFormField(
+          key: const Key('note_field'),
+          controller: controller,
+          maxLines: 4,
+          maxLength: AppConstants.maxNoteLength,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: Validators.note,
+          decoration: const InputDecoration(
+            labelText: 'Nota (opcional)',
+            hintText: '¿Por qué te interesa este repo?',
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+        FilledButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) Navigator.pop(ctx, controller.text.trim());
+          },
+          child: const Text('Guardar'),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Informe de un repositorio en seis pestañas.
+class ResultScreen extends StatelessWidget {
+  const ResultScreen({super.key, required this.result});
+
+  final AnalysisResult result;
+
+  /// Agrega o quita el repo de favoritos, con confirmación y SnackBar.
+  Future<void> _toggleFavorite(BuildContext context) async {
+    final favorites = context.read<FavoritesProvider>();
+    final userId = context.read<AuthProvider>().user!.id!;
+    final existing = favorites.find(result.repo.fullName);
+
+    if (existing == null) {
+      final note = await askNote(context, title: 'Agregar a favoritos');
+      if (note == null || !context.mounted) return;
+      final ok = await favorites.add(userId, result.repo.fullName, note: note);
+      if (!context.mounted) return;
+      showSnack(context, ok ? 'Guardado en favoritos' : 'No se pudo guardar el favorito');
+    } else {
+      final confirmed = await confirmDialog(
+        context,
+        title: 'Quitar de favoritos',
+        message: '¿Quitar ${result.repo.fullName} de tus favoritos?',
+        confirmLabel: 'Quitar',
+      );
+      if (!confirmed || !context.mounted) return;
+      final ok = await favorites.remove(existing.id!);
+      if (!context.mounted) return;
+      showSnack(context, ok ? 'Eliminado de favoritos' : 'No se pudo eliminar el favorito');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isFavorite =
+        context.watch<FavoritesProvider>().find(result.repo.fullName) != null;
+    return DefaultTabController(
+      length: 6,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(result.repo.fullName),
+          actions: [
+            Semantics(
+              label: isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos',
+              button: true,
+              child: IconButton(
+                key: const Key('favorite_button'),
+                icon: Icon(isFavorite ? Icons.star : Icons.star_outline),
+                tooltip: isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos',
+                onPressed: () => _toggleFavorite(context),
+              ),
+            ),
+          ],
+          bottom: const TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            tabs: [
+              Tab(text: 'Resumen'),
+              Tab(text: 'Lenguajes'),
+              Tab(text: 'Commits'),
+              Tab(text: 'Archivos'),
+              Tab(text: 'README'),
+              Tab(text: 'Salud'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _SummaryTab(result),
+            _LanguagesTab(result),
+            _CommitsTab(result),
+            _FilesTab(result),
+            _ReadmeTab(result),
+            _HealthTab(result),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Pestaña Resumen: datos generales, stack, temas y contribuidores.
+class _SummaryTab extends StatelessWidget {
+  const _SummaryTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final repo = result.repo;
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: MaxWidth(
+        maxWidth: 900,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundImage:
+                      repo.avatarUrl.isEmpty ? null : NetworkImage(repo.avatarUrl),
+                  onBackgroundImageError: repo.avatarUrl.isEmpty ? null : (_, _) {},
+                  child: repo.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(repo.name, style: theme.textTheme.headlineSmall),
+                      Text('de ${repo.ownerLogin}', style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
+                ),
+                HealthBadge(score: result.healthScore),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              (repo.description?.trim().isNotEmpty ?? false)
+                  ? repo.description!
+                  : 'Sin descripción',
+              style: theme.textTheme.bodyLarge,
+            ),
+            if (result.fromCache) ...[
+              const SizedBox(height: 8),
+              Chip(
+                avatar: const Icon(Icons.cached, size: 18),
+                label: Text('Desde caché · ${Fmt.dateTime(result.analyzedAt)}'),
+              ),
+            ],
+            if (result.alerts.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _AlertsCard(result.alerts),
+            ],
+            const SizedBox(height: 12),
+            // LayoutBuilder: 2 columnas en teléfono, 4 en tableta.
+            LayoutBuilder(
+              builder: (context, constraints) => GridView.count(
+                crossAxisCount: constraints.maxWidth >= 600 ? 4 : 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.5,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                children: [
+                  StatTile(
+                      icon: Icons.star, label: 'Estrellas', value: Fmt.compact(repo.stars)),
+                  StatTile(icon: Icons.call_split, label: 'Forks', value: Fmt.compact(repo.forks)),
+                  StatTile(
+                      icon: Icons.visibility,
+                      label: 'Watchers',
+                      value: Fmt.compact(repo.watchers)),
+                  StatTile(
+                      icon: Icons.bug_report,
+                      label: 'Issues abiertos',
+                      value: Fmt.compact(repo.openIssues)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text('Stack detectado', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 4),
+            if (result.stacks.isEmpty)
+              const Text('No se reconoció ninguna tecnología por los archivos de la raíz')
+            else
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final s in result.stacks)
+                    Chip(avatar: const Icon(Icons.layers, size: 18), label: Text(s)),
+                ],
+              ),
+            if (repo.topics.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Temas', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                children: [for (final t in repo.topics) Chip(label: Text(t))],
+              ),
+            ],
+            const SizedBox(height: 12),
+            Card(
+              child: Column(
+                children: [
+                  _row(Icons.balance, 'Licencia', repo.license ?? 'Sin licencia'),
+                  _row(Icons.sd_storage, 'Tamaño', Fmt.sizeKb(repo.sizeKb)),
+                  _row(Icons.account_tree, 'Rama por defecto', repo.defaultBranch),
+                  _row(Icons.event, 'Creado', Fmt.date(repo.createdAt)),
+                  _row(Icons.update, 'Actualizado', Fmt.date(repo.updatedAt)),
+                ],
+              ),
+            ),
+            if (result.contributors.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Contribuidores principales', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              for (final c in result.contributors)
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    backgroundImage: c.avatarUrl.isEmpty ? null : NetworkImage(c.avatarUrl),
+                    onBackgroundImageError: c.avatarUrl.isEmpty ? null : (_, _) {},
+                  ),
+                  title: Text(c.login),
+                  trailing: Text('${c.contributions} commits'),
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _row(IconData icon, String label, String value) => ListTile(
+        dense: true,
+        leading: Icon(icon),
+        title: Text(label),
+        trailing: Text(value),
+      );
+}
+
+/// Tarjeta roja con los archivos sensibles encontrados.
+class _AlertsCard extends StatelessWidget {
+  const _AlertsCard(this.alerts);
+  final List<String> alerts;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      color: scheme.errorContainer,
+      child: ListTile(
+        leading: Icon(Icons.warning_amber_rounded, color: scheme.onErrorContainer),
+        title: Text(
+          'Alertas de seguridad (${alerts.length})',
+          style: TextStyle(color: scheme.onErrorContainer, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          'Archivos sensibles en la raíz: ${alerts.join(', ')}',
+          style: TextStyle(color: scheme.onErrorContainer),
+        ),
+      ),
+    );
+  }
+}
+
+/// Pestaña Lenguajes: gráfica de pastel (fl_chart) y leyenda con porcentajes.
+class _LanguagesTab extends StatelessWidget {
+  const _LanguagesTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final languages = result.languages;
+    if (languages.isEmpty) {
+      return const EmptyState(
+        icon: Icons.pie_chart_outline,
+        title: 'Sin lenguajes',
+        message: 'GitHub no detectó lenguajes en este repositorio.',
+      );
+    }
+    Color colorAt(int i) => AppTheme.chartColors[i % AppTheme.chartColors.length];
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: MaxWidth(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 240,
+              child: PieChart(
+                PieChartData(
+                  sectionsSpace: 2,
+                  centerSpaceRadius: 36,
+                  sections: [
+                    for (var i = 0; i < languages.length; i++)
+                      PieChartSectionData(
+                        value: languages[i].percent,
+                        color: colorAt(i),
+                        radius: 70,
+                        // Solo se rotulan las rebanadas grandes para que se lean.
+                        title: languages[i].percent >= 8
+                            ? '${languages[i].percent.toStringAsFixed(0)}%'
+                            : '',
+                        titleStyle: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            for (var i = 0; i < languages.length; i++)
+              ListTile(
+                dense: true,
+                leading: CircleAvatar(radius: 8, backgroundColor: colorAt(i)),
+                title: Text(languages[i].name),
+                trailing: Text('${languages[i].percent.toStringAsFixed(1)} %'),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Pestaña Commits: los 10 más recientes.
+class _CommitsTab extends StatelessWidget {
+  const _CommitsTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    if (result.commits.isEmpty) {
+      return const EmptyState(
+        icon: Icons.commit,
+        title: 'Sin commits',
+        message: 'Este repositorio todavía no tiene commits.',
+      );
+    }
+    return MaxWidth(
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: result.commits.length,
+        separatorBuilder: (_, _) => const Divider(height: 1),
+        itemBuilder: (context, i) {
+          final c = result.commits[i];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: c.avatarUrl == null ? null : NetworkImage(c.avatarUrl!),
+              onBackgroundImageError: c.avatarUrl == null ? null : (_, _) {},
+              child: c.avatarUrl == null ? const Icon(Icons.person) : null,
+            ),
+            title: Text(c.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+            subtitle: Text('${c.authorName} · ${Fmt.dateTime(c.date)} · ${c.shortSha}'),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Pestaña Archivos: contenido de la raíz, marcando los sensibles.
+class _FilesTab extends StatelessWidget {
+  const _FilesTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    if (result.files.isEmpty) {
+      return const EmptyState(
+        icon: Icons.folder_open,
+        title: 'Sin archivos',
+        message: 'La raíz del repositorio está vacía.',
+      );
+    }
+    final scheme = Theme.of(context).colorScheme;
+    // Carpetas primero, luego archivos, en orden alfabético.
+    final files = [...result.files]..sort((a, b) {
+        if (a.isDir != b.isDir) return a.isDir ? -1 : 1;
+        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      });
+    final sensitive = Analyzer.securityAlerts(files).toSet();
+    return MaxWidth(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: files.length,
+        itemBuilder: (context, i) {
+          final f = files[i];
+          final risky = sensitive.contains(f.name);
+          return ListTile(
+            dense: true,
+            leading: Icon(
+              risky
+                  ? Icons.warning_amber_rounded
+                  : (f.isDir ? Icons.folder : Icons.insert_drive_file_outlined),
+              color: risky ? scheme.error : (f.isDir ? scheme.primary : null),
+            ),
+            title: Text(f.name),
+            subtitle: risky ? const Text('Archivo sensible') : null,
+            trailing: f.isDir ? null : Text(Fmt.sizeKb((f.size / 1024).ceil())),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Pestaña README: Markdown renderizado con flutter_markdown.
+class _ReadmeTab extends StatelessWidget {
+  const _ReadmeTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final readme = result.readme;
+    if (readme == null || readme.trim().isEmpty) {
+      return const EmptyState(
+        icon: Icons.description_outlined,
+        title: 'Sin README',
+        message: 'Este repositorio no tiene un archivo README.',
+      );
+    }
+    return MaxWidth(
+      maxWidth: 900,
+      child: Markdown(
+        data: readme,
+        padding: const EdgeInsets.all(16),
+        // Solo imágenes http(s); si fallan (SVG, rutas relativas) no se muestran.
+        sizedImageBuilder: (config) {
+          if (!config.uri.hasScheme || !config.uri.scheme.startsWith('http')) {
+            return const SizedBox.shrink();
+          }
+          return Image.network(
+            config.uri.toString(),
+            errorBuilder: (_, _, _) => const SizedBox.shrink(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Pestaña Salud: puntuación de 0 a 100 con el desglose de cada criterio.
+class _HealthTab extends StatelessWidget {
+  const _HealthTab(this.result);
+  final AnalysisResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: MaxWidth(
+        child: Column(
+          children: [
+            HealthGauge(score: result.healthScore, size: 140),
+            const SizedBox(height: 8),
+            Text('Puntuación de salud', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 16),
+            Card(
+              child: Column(
+                children: [
+                  for (final check in result.healthChecks)
+                    ListTile(
+                      leading: Icon(
+                        check.passed ? Icons.check_circle : Icons.cancel,
+                        color: check.passed ? const Color(0xFF2E7D32) : theme.colorScheme.error,
+                      ),
+                      title: Text(check.label),
+                      trailing: Text(
+                        check.passed ? '+${check.points}' : '0 / ${check.points}',
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (result.alerts.isEmpty)
+              const Card(
+                child: ListTile(
+                  leading: Icon(Icons.verified_user, color: Color(0xFF2E7D32)),
+                  title: Text('Sin alertas de seguridad'),
+                  subtitle: Text('No se encontraron archivos sensibles en la raíz.'),
+                ),
+              )
+            else
+              _AlertsCard(result.alerts),
+          ],
+        ),
+      ),
+    );
+  }
+}
