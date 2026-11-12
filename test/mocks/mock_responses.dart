@@ -81,6 +81,22 @@ const Map<String, String> _jsonHeaders = {
 /// Cliente falso que responde a todos los endpoints con datos válidos.
 /// [overrides] permite cambiar la respuesta de una ruta concreta
 /// (la clave es el final de la ruta, por ejemplo `/commits`).
+/// Árbol completo (GET /git/trees/{rama}?recursive=1).
+const treeJson = '''
+{"truncated": false, "tree": [
+  {"path": "lib", "type": "tree"},
+  {"path": "lib/main.dart", "type": "blob", "size": 2048},
+  {"path": "test", "type": "tree"},
+  {"path": "test/main_test.dart", "type": "blob", "size": 512},
+  {"path": "pubspec.yaml", "type": "blob", "size": 900},
+  {"path": ".gitignore", "type": "blob", "size": 120},
+  {"path": "README.md", "type": "blob", "size": 300},
+  {"path": ".env", "type": "blob", "size": 40},
+  {"path": "Dockerfile", "type": "blob", "size": 200},
+  {"path": ".github/workflows/ci.yml", "type": "blob", "size": 300}
+]}
+''';
+
 MockClient successClient({Map<String, http.Response> overrides = const {}}) {
   return MockClient((request) async {
     final path = request.url.path;
@@ -94,6 +110,7 @@ MockClient successClient({Map<String, http.Response> overrides = const {}}) {
     }
     if (path.endsWith('/contents')) return http.Response(contentsJson, 200, headers: _jsonHeaders);
     if (path.endsWith('/readme')) return http.Response(readmeJson, 200, headers: _jsonHeaders);
+    if (path.contains('/git/trees/')) return http.Response(treeJson, 200, headers: _jsonHeaders);
     return http.Response(repoJson, 200, headers: _jsonHeaders);
   });
 }

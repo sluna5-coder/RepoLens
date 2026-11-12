@@ -22,6 +22,8 @@ class RepoData {
     required this.contributors,
     required this.files,
     required this.readme,
+    this.tree = const [],
+    this.treeTruncated = false,
   });
 
   final RepoInfo repo;
@@ -30,6 +32,12 @@ class RepoData {
   final List<Contributor> contributors;
   final List<RepoFile> files;
   final String? readme;
+
+  /// Todos los archivos y carpetas del repositorio (vacío si no se pudo leer).
+  final List<RepoFile> tree;
+
+  /// `true` si GitHub recortó el árbol por ser muy grande.
+  final bool treeTruncated;
 }
 
 /// Único punto de la app que hace peticiones HTTP a la API de GitHub.
@@ -99,6 +107,29 @@ class GithubService {
     });
   }
 
+  /// GET /repos/{owner}/{repo}/git/trees/{rama}?recursive=1: todo el árbol del
+  /// repositorio en una sola petición. GitHub lo recorta en repos enormes y lo
+  /// indica con `truncated`.
+  Future<({List<RepoFile> files, bool truncated})> getTree(
+      String fullName, String branch) async {
+    final json = await _get(
+        '/repos/$fullName/git/trees/${Uri.encodeComponent(branch)}?recursive=1');
+    return _parse(() {
+      final map = json as Map<String, dynamic>;
+      final files = (map['tree'] as List).map((e) {
+        final item = e as Map<String, dynamic>;
+        final path = item['path'] as String;
+        return RepoFile(
+          name: path.split('/').last,
+          path: path,
+          type: item['type'] == 'tree' ? 'dir' : 'file',
+          size: (item['size'] as int?) ?? 0,
+        );
+      }).toList();
+      return (files: files, truncated: (map['truncated'] as bool?) ?? false);
+    });
+  }
+
   /// Descarga todo lo necesario para el informe. Primero el repo (si no existe
   /// se corta ahí) y luego el resto en paralelo para ahorrar tiempo.
   Future<RepoData> fetchAll(String fullName) async {
@@ -111,7 +142,9 @@ class GithubService {
       getContributors(fullName).onError<ApiException>((_, _) => <Contributor>[]),
       getContents(fullName),
       getReadme(fullName),
+      _treeOrEmpty(fullName, repo.defaultBranch),
     ]);
+    final tree = results[5] as ({List<RepoFile> files, bool truncated});
     return RepoData(
       repo: repo,
       languages: results[0] as List<LanguageStat>,
@@ -119,7 +152,26 @@ class GithubService {
       contributors: results[2] as List<Contributor>,
       files: results[3] as List<RepoFile>,
       readme: results[4] as String?,
+      tree: tree.files,
+      treeTruncated: tree.truncated,
     );
+  }
+
+  /// El árbol es un extra: si falla (salvo por red o límite de peticiones),
+  /// el informe sale igual con los archivos de la raíz.
+  Future<({List<RepoFile> files, bool truncated})> _treeOrEmpty(
+      String fullName, String branch) async {
+    try {
+      return await getTree(fullName, branch);
+    } on RateLimitException {
+      rethrow;
+    } on NoConnectionException {
+      rethrow;
+    } on RequestTimeoutException {
+      rethrow;
+    } on AppException {
+      return (files: <RepoFile>[], truncated: false);
+    }
   }
 
   /// Hace el GET, aplica el timeout y traduce cada falla a una excepción tipada.

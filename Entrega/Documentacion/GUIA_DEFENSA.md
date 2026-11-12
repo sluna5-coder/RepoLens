@@ -4,7 +4,7 @@ Guía de estudio para la exposición. Explica, archivo por archivo, dónde ocurr
 
 ## 1. La idea en 30 segundos
 
-RepoLens recibe la URL de un repositorio público de GitHub, consulta seis endpoints de la API, convierte las respuestas en modelos, calcula un análisis propio (stack, salud y alertas) y lo muestra en seis pestañas. Todo lo que guarda (usuarios, historial, favoritos y caché) vive en SQLite dentro del teléfono. No hay servidor propio.
+RepoLens recibe la URL de un repositorio público de GitHub, consulta siete endpoints de la API (incluido el árbol completo del repositorio), convierte las respuestas en modelos, calcula un análisis propio (stack, salud y alertas) y lo muestra en seis pestañas. Todo lo que guarda (usuarios, historial, favoritos y caché) vive en SQLite dentro del teléfono. No hay servidor propio.
 
 ## 2. El recorrido de un análisis
 

@@ -10,6 +10,14 @@ import '../mocks/mock_responses.dart';
 
 void main() {
   group('GithubService con MockClient', () {
+    test('fetchAll incluye el árbol completo del repositorio', () async {
+      final service = GithubService(client: successClient());
+      final data = await service.fetchAll('octocat/demo');
+      expect(data.tree.where((f) => !f.isDir).length, 8);
+      expect(data.tree.firstWhere((f) => f.path == 'lib/main.dart').name, 'main.dart');
+      expect(data.treeTruncated, isFalse);
+    });
+
     test('fetchAll descarga y parsea todos los endpoints', () async {
       final service = GithubService(client: successClient());
       final data = await service.fetchAll('octocat/demo');

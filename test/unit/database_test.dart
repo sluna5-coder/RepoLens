@@ -113,13 +113,13 @@ void main() {
     expect(first!.fromCache, isFalse);
     expect(first.stacks, containsAll(['Flutter/Dart', 'Docker']));
     expect(first.alerts, ['.env']);
-    expect(requests, 6); // los 6 endpoints
+    expect(requests, 7); // los 6 endpoints más el árbol completo
 
     // Segunda vez: sale de la caché, sin peticiones y aunque no haya red.
     connectivity.online = false;
     final second = await analysis.analyze('github.com/octocat/demo', userId: userId);
     expect(second!.fromCache, isTrue);
-    expect(requests, 6);
+    expect(requests, 7);
 
     // Historial: consultar, reabrir snapshot, eliminar uno y vaciar.
     final history = HistoryProvider(HistoryRepository());

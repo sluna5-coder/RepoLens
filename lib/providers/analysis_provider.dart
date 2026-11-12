@@ -52,9 +52,11 @@ class AnalysisProvider extends ChangeNotifier {
     if (!force) {
       try {
         final cached = await _cache.get(fullName);
-        if (cached != null) {
-          return AnalysisResult.fromJson(jsonDecode(cached) as Map<String, dynamic>)
-              .copyWith(fromCache: true);
+        final json = cached == null ? null : jsonDecode(cached) as Map<String, dynamic>;
+        // Los informes de versiones anteriores no traen el análisis del árbol:
+        // se descartan para no mostrar un informe incompleto.
+        if (json != null && json.containsKey('insights')) {
+          return AnalysisResult.fromJson(json).copyWith(fromCache: true);
         }
       } catch (_) {/* caché ilegible: se ignora */}
     }

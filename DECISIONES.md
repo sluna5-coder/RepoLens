@@ -8,7 +8,7 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 - Proyecto Flutter 3.47.6 / Dart 3.13.5 (solo plataforma Android), paquete `app.repolens.repolens`.
 - Código completo: `core/`, `models/`, `services/`, `data/`, `providers/`, `screens/`, `widgets/`.
 - `flutter analyze`: **No issues found.**
-- `flutter test`: **61 pruebas, todas aprobadas** (unitarias, de widget y de integración con SQLite real vía `sqflite_common_ffi`). Salida guardada en `Entrega/Evidencias/Pruebas/`.
+- `flutter test`: **69 pruebas, todas aprobadas** (unitarias, de widget y de integración con SQLite real vía `sqflite_common_ffi`). Salida guardada en `Entrega/Evidencias/Pruebas/`.
 - **APK release generada**: `flutter build apk --release` terminó bien (52.8 MB). Copia en `Entrega/Aplicacion/RepoLens.apk`.
 - Icono propio generado con `dart run flutter_launcher_icons`, nombre "RepoLens" y permiso INTERNET.
 - Documentación: `README.md`, `Entrega/Documentacion/DocumentoTecnico.md` (19 apartados), matriz de pruebas, bitácora, `GUIA_DEFENSA.md`, `GUION_VIDEO.md` y `Entrega/README.txt`.
@@ -46,6 +46,18 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 - **APK fuera de Git**: `Entrega/Aplicacion/*.apk` está en `.gitignore` porque pesa unos 53 MB. Hay que adjuntarla aparte en la entrega o subirla como *Release* en GitHub.
 - **Guías**: `GUIA_DEFENSA.md` y `GUION_VIDEO.md` están en la raíz y copiadas en `Entrega/Documentacion/`.
 - **Bitácora**: los "prompts reales" son los cinco mensajes que el autor envió en la sesión; no se inventó ninguno.
+
+## Mejora: análisis del árbol completo (2026-11-12)
+Motivo: con repos pequeños o con el proyecto dentro de una subcarpeta, el informe casi no daba información (stack vacío, consejos genéricos).
+- **Árbol completo**: una sola petición extra, `GET /git/trees/{rama}?recursive=1`. Si falla por otra causa que no sea red o límite de peticiones, el informe sale igual con la raíz.
+- **Stack**: se buscan archivos de configuración en cualquier carpeta y herramientas como Vite, Next.js, Tailwind, Docker Compose o GitHub Actions. Sin archivos de configuración se usan las extensiones (HTML, CSS, JavaScript, etc.). En proyectos Flutter no se reportan Android, Kotlin ni CMake, porque son plantilla del framework.
+- **Estructura**: archivos, carpetas, tamaño, profundidad, tipos de archivo, archivos más pesados y prácticas presentes (pruebas, CI, Docker, documentación, guía de contribución y registro de cambios).
+- **Qué mejorar**: un consejo por cada criterio de salud no cumplido, más pruebas, CI, archivos sensibles, archivos de más de 5 MB e inactividad mayor a un año. Si el README está en una subcarpeta, se indica su ruta.
+- **Salud**: los pesos no cambian. El `.gitignore` ahora cuenta en cualquier carpeta; el README sigue contando solo en la raíz, porque es el único que GitHub muestra en la portada.
+- **Alertas de seguridad**: se revisan todas las carpetas y se muestra la ruta del archivo.
+- **Caché**: los informes guardados por la versión anterior (sin análisis del árbol) se descartan.
+- **Botón Actualizar** en el informe: vuelve a consultar la API sin usar la caché.
+- Comprobado en el emulador con `sluna5-coder/rick-morty`: stack Flutter/Dart, 79 archivos en 38 carpetas, salud 30 y recomendaciones. Pruebas: 69 aprobadas.
 
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.

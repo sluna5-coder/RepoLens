@@ -140,4 +140,90 @@ void main() {
       expect(result.analyzedAt, now);
     });
   });
+
+  group('Árbol completo', () {
+    RepoFile node(String path, {int size = 10}) => RepoFile(
+        name: path.split('/').last, path: path, type: 'file', size: size);
+
+    test('detecta el stack en subcarpetas y por herramientas', () {
+      final stack = Analyzer.detectStack(
+          [node('web/package.json'), node('web/vite.config.ts'), node('.github/workflows/ci.yml')]);
+      expect(stack, containsAll(['Node/JS', 'Vite', 'GitHub Actions']));
+    });
+
+    test('en Flutter no repite las plataformas de la plantilla', () {
+      expect(
+          Analyzer.detectStack([
+            node('app/pubspec.yaml'),
+            node('app/android/build.gradle.kts'),
+            node('app/android/app/src/main/AndroidManifest.xml'),
+            node('app/windows/CMakeLists.txt'),
+          ]),
+          ['Flutter/Dart']);
+    });
+
+    test('sin archivos de configuración usa las extensiones', () {
+      expect(Analyzer.detectStack([node('index.html'), node('css/style.css'), node('js/app.js')]),
+          ['HTML', 'CSS', 'JavaScript']);
+    });
+
+    test('reporta archivos sensibles en subcarpetas con su ruta', () {
+      expect(Analyzer.securityAlerts([node('config/.env'), node('src/app.js')]), ['config/.env']);
+    });
+
+    test('calcula estructura, prácticas y recomendaciones', () {
+      final base = _data(license: false, topics: const []);
+      final data = RepoData(
+        repo: base.repo,
+        languages: base.languages,
+        commits: base.commits,
+        contributors: base.contributors,
+        files: base.files,
+        readme: base.readme,
+        tree: [
+          const RepoFile(name: 'src', path: 'src', type: 'dir', size: 0),
+          node('src/app.js', size: 2000),
+          node('src/util.js', size: 500),
+          node('index.html', size: 100),
+        ],
+      );
+      final result = Analyzer.build(data, now: now);
+      final insights = result.insights!;
+      expect(insights.totalFiles, 3);
+      expect(insights.totalDirs, 1);
+      expect(insights.totalBytes, 2600);
+      expect(insights.maxDepth, 1);
+      expect(insights.extensions.first.extension, '.js');
+      expect(insights.extensions.first.count, 2);
+      expect(insights.largestFiles.first.path, 'src/app.js');
+      expect(insights.signals.firstWhere((s) => s.label.startsWith('Pruebas')).present, isFalse);
+      expect(insights.recommendations, isNotEmpty);
+      expect(insights.recommendations.any((r) => r.contains('licencia')), isTrue);
+    });
+
+    test('README y .gitignore dentro de la carpeta del proyecto', () {
+      final base = _data(files: const ['app']);
+      final data = RepoData(
+        repo: base.repo,
+        languages: base.languages,
+        commits: base.commits,
+        contributors: base.contributors,
+        files: [_file('app', type: 'dir')],
+        readme: null,
+        tree: [
+          const RepoFile(name: 'app', path: 'app', type: 'dir', size: 0),
+          node('app/README.md'),
+          node('app/.gitignore'),
+        ],
+      );
+      final result = Analyzer.build(data, now: now);
+      expect(result.healthChecks.firstWhere((c) => c.label == 'Tiene .gitignore').passed, isTrue);
+      expect(result.healthChecks.firstWhere((c) => c.label == 'Tiene README').passed, isFalse);
+      expect(result.insights!.recommendations.first, contains('app/README.md'));
+    });
+
+    test('sin árbol no hay análisis de estructura', () {
+      expect(Analyzer.build(_data(), now: now).insights, isNull);
+    });
+  });
 }

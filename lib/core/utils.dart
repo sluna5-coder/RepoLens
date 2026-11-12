@@ -28,5 +28,12 @@ class Fmt {
     return '$kb KB';
   }
 
+  /// Tamaño en bytes a texto legible.
+  static String bytes(int b) {
+    if (b >= 1024 * 1024) return '${(b / 1024 / 1024).toStringAsFixed(1)} MB';
+    if (b >= 1024) return '${(b / 1024).toStringAsFixed(1)} KB';
+    return '$b B';
+  }
+
   static String _two(int v) => v.toString().padLeft(2, '0');
 }

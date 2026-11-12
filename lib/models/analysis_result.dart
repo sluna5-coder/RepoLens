@@ -3,6 +3,7 @@ import 'contributor.dart';
 import 'language_stat.dart';
 import 'repo_file.dart';
 import 'repo_info.dart';
+import 'repo_insights.dart';
 
 /// Un criterio de la puntuación de salud (ej. "Tiene README").
 class HealthCheck {
@@ -39,6 +40,7 @@ class AnalysisResult {
     required this.healthChecks,
     required this.alerts,
     required this.analyzedAt,
+    this.insights,
     this.fromCache = false,
   });
 
@@ -62,6 +64,9 @@ class AnalysisResult {
   final List<String> alerts;
   final DateTime analyzedAt;
 
+  /// Análisis del árbol completo; `null` en informes viejos o si no se pudo leer.
+  final RepoInsights? insights;
+
   /// `true` si el informe salió de la caché local y no de la red.
   final bool fromCache;
 
@@ -77,6 +82,7 @@ class AnalysisResult {
         healthChecks: healthChecks,
         alerts: alerts,
         analyzedAt: analyzedAt,
+        insights: insights,
         fromCache: fromCache ?? this.fromCache,
       );
 
@@ -97,6 +103,9 @@ class AnalysisResult {
       healthChecks: list('health_checks', HealthCheck.fromJson),
       alerts: ((json['alerts'] as List?) ?? const []).cast<String>(),
       analyzedAt: DateTime.parse(json['analyzed_at'] as String),
+      insights: json['insights'] == null
+          ? null
+          : RepoInsights.fromJson(json['insights'] as Map<String, dynamic>),
     );
   }
 
@@ -112,5 +121,6 @@ class AnalysisResult {
         'health_checks': healthChecks.map((e) => e.toJson()).toList(),
         'alerts': alerts,
         'analyzed_at': analyzedAt.toIso8601String(),
+        'insights': insights?.toJson(),
       };
 }

@@ -8,7 +8,11 @@ import '../core/theme.dart';
 import '../core/utils.dart';
 import '../core/validators.dart';
 import '../models/analysis_result.dart';
+import '../models/repo_insights.dart';
+import '../app.dart';
+import '../providers/analysis_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/history_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../services/analyzer.dart';
 import '../widgets/common.dart';
@@ -83,6 +87,24 @@ class ResultScreen extends StatelessWidget {
     }
   }
 
+  /// Vuelve a consultar la API sin usar la caché y reemplaza el informe.
+  Future<void> _refresh(BuildContext context) async {
+    final analysis = context.read<AnalysisProvider>();
+    final history = context.read<HistoryProvider>();
+    final userId = context.read<AuthProvider>().user!.id!;
+    showSnack(context, 'Actualizando el informe');
+    final fresh =
+        await analysis.analyze(result.repo.fullName, userId: userId, force: true);
+    if (!context.mounted) return;
+    if (fresh == null) {
+      showSnack(context, analysis.error?.message ?? 'No se pudo actualizar');
+      return;
+    }
+    await history.load(userId);
+    if (!context.mounted) return;
+    Navigator.pushReplacementNamed(context, AppRoutes.result, arguments: fresh);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isFavorite =
@@ -93,6 +115,12 @@ class ResultScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(result.repo.fullName),
           actions: [
+            IconButton(
+              key: const Key('refresh_button'),
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Actualizar',
+              onPressed: () => _refresh(context),
+            ),
             Semantics(
               label: isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos',
               button: true,
@@ -219,7 +247,7 @@ class _SummaryTab extends StatelessWidget {
             Text('Stack detectado', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             if (result.stacks.isEmpty)
-              const Text('No se reconoció ninguna tecnología por los archivos de la raíz')
+              const Text('No se reconoció ninguna tecnología en los archivos del repositorio')
             else
               Wrap(
                 spacing: 8,
@@ -228,6 +256,12 @@ class _SummaryTab extends StatelessWidget {
                     Chip(avatar: const Icon(Icons.layers, size: 18), label: Text(s)),
                 ],
               ),
+            if (result.insights != null) ...[
+              const SizedBox(height: 12),
+              Text('Estructura', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              _StructureCard(result.insights!),
+            ],
             if (repo.topics.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text('Temas', style: theme.textTheme.titleMedium),
@@ -296,7 +330,7 @@ class _AlertsCard extends StatelessWidget {
           style: TextStyle(color: scheme.onErrorContainer, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          'Archivos sensibles en la raíz: ${alerts.join(', ')}',
+          'Archivos sensibles: ${alerts.join(', ')}',
           style: TextStyle(color: scheme.onErrorContainer),
         ),
       ),
@@ -423,12 +457,15 @@ class _FilesTab extends StatelessWidget {
         return a.name.toLowerCase().compareTo(b.name.toLowerCase());
       });
     final sensitive = Analyzer.securityAlerts(files).toSet();
+    final insights = result.insights;
+    final header = insights == null ? 0 : 1;
     return MaxWidth(
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: files.length,
-        itemBuilder: (context, i) {
-          final f = files[i];
+        itemCount: files.length + header,
+        itemBuilder: (context, index) {
+          if (index < header) return _FilesSummary(insights!);
+          final f = files[index - header];
           final risky = sensitive.contains(f.name);
           return ListTile(
             dense: true,
@@ -524,13 +561,133 @@ class _HealthTab extends StatelessWidget {
                 child: ListTile(
                   leading: Icon(Icons.verified_user, color: Color(0xFF2E7D32)),
                   title: Text('Sin alertas de seguridad'),
-                  subtitle: Text('No se encontraron archivos sensibles en la raíz.'),
+                  subtitle: Text('No se encontraron archivos sensibles.'),
                 ),
               )
             else
               _AlertsCard(result.alerts),
+            if (result.insights?.recommendations.isNotEmpty ?? false) ...[
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Qué mejorar', style: theme.textTheme.titleMedium),
+              ),
+              const SizedBox(height: 4),
+              Card(
+                child: Column(
+                  children: [
+                    for (final tip in result.insights!.recommendations)
+                      ListTile(
+                        leading: const Icon(Icons.lightbulb_outline),
+                        title: Text(tip),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Tarjeta de estructura: tamaño del árbol y buenas prácticas detectadas.
+class _StructureCard extends StatelessWidget {
+  const _StructureCard(this.insights);
+  final RepoInsights insights;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 16,
+              runSpacing: 4,
+              children: [
+                Text('${insights.totalFiles} archivos'),
+                Text('${insights.totalDirs} carpetas'),
+                Text(Fmt.bytes(insights.totalBytes)),
+                Text('Profundidad ${insights.maxDepth}'),
+              ],
+            ),
+            if (insights.truncated)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text('Repositorio muy grande: GitHub mostró solo una parte del árbol.',
+                    style: theme.textTheme.bodySmall),
+              ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final s in insights.signals)
+                  Chip(
+                    avatar: Icon(
+                      s.present ? Icons.check_circle : Icons.remove_circle_outline,
+                      size: 18,
+                      color: s.present ? const Color(0xFF2E7D32) : theme.colorScheme.outline,
+                    ),
+                    label: Text(s.label),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Encabezado de la pestaña Archivos: extensiones y archivos más pesados.
+class _FilesSummary extends StatelessWidget {
+  const _FilesSummary(this.insights);
+  final RepoInsights insights;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${insights.totalFiles} archivos en ${insights.totalDirs} carpetas',
+              style: theme.textTheme.titleMedium),
+          if (insights.extensions.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text('Tipos de archivo', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final e in insights.extensions)
+                  Chip(label: Text('${e.extension} · ${e.count}')),
+              ],
+            ),
+          ],
+          if (insights.largestFiles.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text('Archivos más pesados', style: theme.textTheme.titleSmall),
+            for (final f in insights.largestFiles)
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.description_outlined),
+                title: Text(f.path, maxLines: 1, overflow: TextOverflow.ellipsis),
+                trailing: Text(Fmt.bytes(f.size)),
+              ),
+          ],
+          const Divider(),
+          Text('Raíz del repositorio', style: theme.textTheme.titleSmall),
+        ],
       ),
     );
   }

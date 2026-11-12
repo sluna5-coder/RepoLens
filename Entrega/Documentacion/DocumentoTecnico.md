@@ -24,7 +24,7 @@ Para decidir si conviene usar, estudiar o contribuir a un repositorio hay que re
 **General.** Desarrollar una aplicación móvil multiplataforma en Flutter que analice repositorios públicos de GitHub y presente un informe claro con datos, evaluación de salud y alertas de seguridad, con persistencia local.
 
 **Específicos.**
-1. Consumir seis endpoints de la API de GitHub y convertir sus respuestas JSON en modelos tipados.
+1. Consumir siete endpoints de la API de GitHub (incluido el árbol completo del repositorio) y convertir sus respuestas JSON en modelos tipados.
 2. Implementar autenticación local con contraseña hasheada (SHA-256 + salt) y sesión persistente.
 3. Guardar historial, favoritos y caché en SQLite con operaciones CRUD completas.
 4. Programar un análisis propio: detección de stack, puntuación de salud y alertas de seguridad.
@@ -411,7 +411,7 @@ La hora de reinicio sale del encabezado `X-RateLimit-Reset`. `ErrorView` (`lib/w
 Resultado del 2026-11-11:
 
 - `flutter analyze`: **No issues found.**
-- `flutter test`: **61 pruebas, todas aprobadas.**
+- `flutter test`: **69 pruebas, todas aprobadas.**
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
@@ -434,7 +434,7 @@ Resultado del 2026-11-11:
 | 1 | Login correcto | Entrar con el usuario demo | Entra a la app | Navega a la pantalla principal | Sí | `auth_screens_test.dart` |
 | 2 | Contraseña incorrecta | Contraseña `Incorrecta1` | Mensaje de error | "Email o contraseña incorrectos" | Sí | `auth_screens_test.dart` |
 | 3 | Campos vacíos | Entrar sin datos | Mensajes de obligatorio | Dos mensajes mostrados | Sí | `auth_screens_test.dart` |
-| 4 | Consulta a la API | Analizar `octocat/demo` | Informe completo | 6 endpoints parseados | Sí (simulada) | `github_service_test.dart` |
+| 4 | Consulta a la API | Analizar `octocat/demo` | Informe completo | 7 endpoints parseados | Sí (simulada) | `github_service_test.dart` |
 | 5 | Sin conexión | Analizar sin red | Mensaje y Reintentar | `NoConnectionException` | Sí | `database_test.dart` |
 | 6 | Repo inexistente | Analizar `no/existe` | Mensaje de no encontrado | `NotFoundException` | Sí | `github_service_test.dart` |
 | 7 | Guardar favorito | Agregar con nota | Queda en SQLite | Se lee al recargar | Sí | `database_test.dart` |
@@ -454,7 +454,7 @@ Se usó **Claude Code** (Anthropic) como asistente de programación. El autor es
 | Diagnosticó y resolvió errores de compilación y de entorno | Revisa y entiende el código para poder explicarlo en la defensa |
 | Ejecutó `flutter analyze` y `flutter test` y corrigió lo que fallaba | Prueba la app en el teléfono, toma las capturas y graba el video |
 
-Límites reconocidos: el código generado no se da por bueno sin verificación. Por eso hay 61 pruebas automatizadas y una matriz que distingue lo comprobado de forma automática de lo que falta comprobar a mano. Los ejemplos de prompts y lo que se aprendió de cada uno están en la bitácora.
+Límites reconocidos: el código generado no se da por bueno sin verificación. Por eso hay 69 pruebas automatizadas y una matriz que distingue lo comprobado de forma automática de lo que falta comprobar a mano. Los ejemplos de prompts y lo que se aprendió de cada uno están en la bitácora.
 
 ## 17. Problemas encontrados y soluciones
 
