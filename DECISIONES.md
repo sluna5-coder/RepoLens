@@ -85,6 +85,10 @@ Motivo: muchos README usan HTML (`<p align>`, `<table>`, `<img>`), rutas relativ
 - Las capturas grandes se limitan a 420 px de ancho.
 - Comprobado en web con `jorgepizanosaucedo-crypto/de-peon-a-rey`: logo SVG, título, texto, enlace y capturas. 7 pruebas nuevas; total 77.
 
+## Mejora: enlaces del README (2026-11-12)
+- Los enlaces del README se abren en el navegador con `url_launcher`. Solo se aceptan `http`, `https` y `mailto`; las anclas internas (`#seccion`) se ignoran. Si no se puede abrir, aparece un aviso.
+- En Android se declararon en `AndroidManifest.xml` las consultas `VIEW` para `http` y `https`, necesarias desde Android 11 para encontrar el navegador.
+
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
    - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.

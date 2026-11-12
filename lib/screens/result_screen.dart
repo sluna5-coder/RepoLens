@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../core/constants.dart';
 import '../core/readme_formatter.dart';
@@ -513,6 +514,7 @@ class _ReadmeTab extends StatelessWidget {
       child: Markdown(
         data: formatter.format(readme),
         padding: const EdgeInsets.all(16),
+        onTapLink: (_, href, _) => _openLink(context, href),
         sizedImageBuilder: (config) => _ReadmeImage(
           uri: config.uri.hasScheme
               ? config.uri
@@ -523,6 +525,15 @@ class _ReadmeTab extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Abre un enlace del README en el navegador. Solo acepta http, https y
+/// mailto; los anclas internas (#seccion) se ignoran.
+Future<void> _openLink(BuildContext context, String? href) async {
+  final uri = href == null ? null : Uri.tryParse(href);
+  if (uri == null || !const {'http', 'https', 'mailto'}.contains(uri.scheme)) return;
+  final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  if (!opened && context.mounted) showSnack(context, 'No se pudo abrir el enlace');
 }
 
 /// Imagen del README: PNG, JPG, GIF o SVG, con el tamaño pedido en el HTML.
