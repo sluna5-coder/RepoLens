@@ -59,6 +59,16 @@ Motivo: con repos pequeños o con el proyecto dentro de una subcarpeta, el infor
 - **Botón Actualizar** en el informe: vuelve a consultar la API sin usar la caché.
 - Comprobado en el emulador con `sluna5-coder/rick-morty`: stack Flutter/Dart, 79 archivos en 38 carpetas, salud 30 y recomendaciones. Pruebas: 69 aprobadas.
 
+## Mejora: versión web para Chrome (2026-11-12)
+- Se agregó la plataforma web (`flutter create --platforms web .`). La entrega principal sigue siendo la APK.
+- **SQLite en web**: `sqflite_common_ffi_web`. En `main.dart`, si `kIsWeb`, se usa `databaseFactoryFfiWeb`. Los archivos `web/sqlite3.wasm` y `web/sqflite_sw.js` se generaron con `dart run sqflite_common_ffi_web:setup` y se incluyen en el repositorio porque sin ellos la versión web no abre la base de datos.
+- La API de GitHub permite peticiones desde el navegador (CORS), así que el servicio no cambió.
+- `.vscode/launch.json` con dos configuraciones: "RepoLens (Chrome)" y "RepoLens (Android)".
+- Nombre, descripción, colores e iconos de la versión web son los de RepoLens.
+- Se borró `test/widget_test.dart`, la prueba de plantilla que creó `flutter create`.
+- Comprobado en el navegador: login con el usuario de prueba y análisis de `sluna5-coder/rick-morty`.
+- La APK pasó de 52.9 MB a 57.6 MB por la nueva dependencia. No se probó en el emulador después de este cambio porque estaba cerrado.
+
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
    - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.

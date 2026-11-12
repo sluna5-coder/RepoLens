@@ -66,9 +66,21 @@ flutter pub get
 
 ## Ejecución
 
+En un teléfono o emulador Android:
+
 ```bash
 flutter run
 ```
+
+En Chrome:
+
+```bash
+flutter run -d chrome
+```
+
+En Visual Studio Code: abre la carpeta del proyecto, ve a **Ejecutar y depurar** (Ctrl+Shift+D), elige **RepoLens (Chrome)** y pulsa F5. Hace falta la extensión **Flutter**.
+
+En el navegador, SQLite corre como WebAssembly (`web/sqlite3.wasm`) y los datos se guardan en el almacenamiento del navegador.
 
 Pruebas y análisis estático:
 
