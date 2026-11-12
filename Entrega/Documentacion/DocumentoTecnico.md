@@ -411,7 +411,7 @@ La hora de reinicio sale del encabezado `X-RateLimit-Reset`. `ErrorView` (`lib/w
 Resultado del 2026-11-11:
 
 - `flutter analyze`: **No issues found.**
-- `flutter test`: **70 pruebas, todas aprobadas.**
+- `flutter test`: **77 pruebas, todas aprobadas.**
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
@@ -454,7 +454,7 @@ Se usó **Claude Code** (Anthropic) como asistente de programación. El autor es
 | Diagnosticó y resolvió errores de compilación y de entorno | Revisa y entiende el código para poder explicarlo en la defensa |
 | Ejecutó `flutter analyze` y `flutter test` y corrigió lo que fallaba | Prueba la app en el teléfono, toma las capturas y graba el video |
 
-Límites reconocidos: el código generado no se da por bueno sin verificación. Por eso hay 70 pruebas automatizadas y una matriz que distingue lo comprobado de forma automática de lo que falta comprobar a mano. Los ejemplos de prompts y lo que se aprendió de cada uno están en la bitácora.
+Límites reconocidos: el código generado no se da por bueno sin verificación. Por eso hay 77 pruebas automatizadas y una matriz que distingue lo comprobado de forma automática de lo que falta comprobar a mano. Los ejemplos de prompts y lo que se aprendió de cada uno están en la bitácora.
 
 ## 17. Problemas encontrados y soluciones
 

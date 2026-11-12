@@ -13,7 +13,7 @@ alertas de seguridad y consejos concretos para mejorarlo. Sin servidor propio.
 ![Dart](https://img.shields.io/badge/Dart-3.13-0A84FF?logo=dart&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-APK-30D158?logo=android&logoColor=white)
 ![Web](https://img.shields.io/badge/Web-Chrome-FF9F0A?logo=googlechrome&logoColor=white)
-![Pruebas](https://img.shields.io/badge/pruebas-70%20aprobadas-30D158)
+![Pruebas](https://img.shields.io/badge/pruebas-77%20aprobadas-30D158)
 
 [Funciones](#funciones) · [Ejecutar](#ejecutar) · [Arquitectura](#arquitectura) · [Documentación](#documentación)
 
@@ -114,7 +114,7 @@ flutter analyze
 flutter test
 ```
 
-70 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
+77 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
 </details>
 
 <details>
@@ -193,7 +193,7 @@ Todos son `GET` sobre `https://api.github.com`:
 | `flutter_secure_storage` | Token de GitHub |
 | `crypto` | Hash SHA-256 de contraseñas |
 | `fl_chart` | Gráfica de lenguajes |
-| `flutter_markdown` | Render del README |
+| `flutter_markdown`, `flutter_svg` | Render del README, con imágenes SVG |
 | `connectivity_plus` | Verificación de red |
 | `flutter_launcher_icons` | Iconos de la app |
 | `flutter_test`, `http/testing`, `sqflite_common_ffi` | Pruebas |

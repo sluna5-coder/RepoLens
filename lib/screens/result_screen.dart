@@ -1,9 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../core/constants.dart';
+import '../core/readme_formatter.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../core/validators.dart';
@@ -501,21 +503,62 @@ class _ReadmeTab extends StatelessWidget {
         message: 'Este repositorio no tiene un archivo README.',
       );
     }
+    // Convierte el HTML de GitHub a Markdown y vuelve absolutas las rutas.
+    final formatter = ReadmeFormatter(
+      fullName: result.repo.fullName,
+      branch: result.repo.defaultBranch,
+    );
     return MaxWidth(
       maxWidth: 900,
       child: Markdown(
-        data: readme,
+        data: formatter.format(readme),
         padding: const EdgeInsets.all(16),
-        // Solo imágenes http(s); si fallan (SVG, rutas relativas) no se muestran.
-        sizedImageBuilder: (config) {
-          if (!config.uri.hasScheme || !config.uri.scheme.startsWith('http')) {
-            return const SizedBox.shrink();
-          }
-          return Image.network(
-            config.uri.toString(),
-            errorBuilder: (_, _, _) => const SizedBox.shrink(),
-          );
-        },
+        sizedImageBuilder: (config) => _ReadmeImage(
+          uri: config.uri.hasScheme
+              ? config.uri
+              : Uri.parse(formatter.resolveImage(config.uri.toString())),
+          width: config.width,
+          height: config.height,
+        ),
+      ),
+    );
+  }
+}
+
+/// Imagen del README: PNG, JPG, GIF o SVG, con el tamaño pedido en el HTML.
+/// Si no carga, no ocupa espacio.
+class _ReadmeImage extends StatelessWidget {
+  const _ReadmeImage({required this.uri, this.width, this.height});
+  final Uri uri;
+  final double? width;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!uri.scheme.startsWith('http')) return const SizedBox.shrink();
+    final url = uri.toString();
+    final path = uri.path.toLowerCase();
+    final isSvg = path.endsWith('.svg') ||
+        uri.host == 'img.shields.io' ||
+        uri.host.endsWith('badgen.net') ||
+        path.contains('/badge');
+    const hidden = SizedBox.shrink();
+    final Widget image = isSvg
+        ? SvgPicture.network(
+            url,
+            width: width,
+            height: height ?? (width == null ? 22 : null),
+            errorBuilder: (_, _, _) => hidden,
+            placeholderBuilder: (_) => hidden,
+          )
+        : Image.network(url,
+            width: width, height: height, errorBuilder: (_, _, _) => hidden);
+    // Capturas grandes: no más anchas que un teléfono, centradas.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: ClipRRect(borderRadius: BorderRadius.circular(8), child: image),
       ),
     );
   }

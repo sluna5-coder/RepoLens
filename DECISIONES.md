@@ -77,6 +77,14 @@ Motivo: con repos pequeños o con el proyecto dentro de una subcarpeta, el infor
 - **README**: encabezado centrado con logo, insignias y capturas que cambian según el tema de GitHub (`<picture>`). Las capturas están en `docs/screenshots/` y se tomaron de la versión web a 390 × 844.
 - Pruebas: 70 aprobadas.
 
+## Mejora: imágenes del README (2026-11-12)
+Motivo: muchos README usan HTML (`<p align>`, `<table>`, `<img>`), rutas relativas como `screenshots/x.png` y logos SVG. El visor de Markdown descartaba el HTML y la app solo cargaba URLs completas, así que esas imágenes no aparecían.
+- `lib/core/readme_formatter.dart` convierte a Markdown lo más común del HTML de GitHub: imágenes (con su ancho y alto), `<picture>`, encabezados, enlaces, negritas, saltos de línea y tablas (las imágenes de una tabla salen una debajo de otra). No toca los bloques de código.
+- Las rutas relativas se resuelven contra `raw.githubusercontent.com/{repo}/{rama}/` para imágenes y `github.com/{repo}/blob/{rama}/` para enlaces. Los enlaces `github.com/.../blob/...` de imágenes se cambian por el archivo crudo.
+- SVG con `flutter_svg` (logos e insignias de shields.io).
+- Las capturas grandes se limitan a 420 px de ancho.
+- Comprobado en web con `jorgepizanosaucedo-crypto/de-peon-a-rey`: logo SVG, título, texto, enlace y capturas. 7 pruebas nuevas; total 77.
+
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
    - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.
