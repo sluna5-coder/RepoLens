@@ -115,12 +115,24 @@ class Analyzer {
 
   /// Lista los archivos sensibles que no deberían estar en un repo público.
   /// Con el árbol completo devuelve la ruta; con la raíz, el nombre.
+  /// Se ignoran las carpetas de pruebas y ejemplos, donde suelen vivir llaves
+  /// falsas (fixtures) que no son un riesgo real.
   static List<String> securityAlerts(List<RepoFile> files) {
-    return files.where((f) => !f.isDir).where((f) {
+    return files.where((f) => !f.isDir && !_isFixturePath(f.path)).where((f) {
       final lower = f.name.toLowerCase();
       return _sensitiveNames.contains(lower) ||
           _sensitiveExtensions.any(lower.endsWith);
     }).map((f) => f.path.isEmpty ? f.name : f.path).toList();
+  }
+
+  static const Set<String> _fixtureFolders = {
+    'test', 'tests', 'testing', '__tests__', 'spec', 'fixtures', 'testdata', 'test_data',
+  };
+
+  /// `true` si el archivo está dentro de una carpeta de pruebas.
+  static bool _isFixturePath(String path) {
+    final parts = path.toLowerCase().split('/');
+    return parts.take(parts.length - 1).any(_fixtureFolders.contains);
   }
 
   /// Extensión en minúsculas con punto (".dart"), o "" si no tiene.

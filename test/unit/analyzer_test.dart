@@ -171,6 +171,13 @@ void main() {
       expect(Analyzer.securityAlerts([node('config/.env'), node('src/app.js')]), ['config/.env']);
     });
 
+    test('ignora llaves falsas en carpetas de pruebas', () {
+      expect(
+          Analyzer.securityAlerts(
+              [node('test/fixtures/dummy.pem'), node('app/testing/debug.keystore')]),
+          isEmpty);
+    });
+
     test('calcula estructura, prácticas y recomendaciones', () {
       final base = _data(license: false, topics: const []);
       final data = RepoData(

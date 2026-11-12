@@ -3,7 +3,7 @@
 | Archivo | Contenido |
 |---|---|
 | `MatrizPruebas.md` | Matriz de pruebas funcionales con su resultado |
-| `resultado_flutter_test.txt` | Salida real de `flutter test` (69 pruebas) |
+| `resultado_flutter_test.txt` | Salida real de `flutter test` (70 pruebas) |
 | `resultado_flutter_analyze.txt` | Salida real de `flutter analyze` |
 
 Capturas que debes agregar tú:

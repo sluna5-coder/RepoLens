@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:repolens/app.dart';
 import 'package:repolens/core/constants.dart';
 import 'package:repolens/providers/auth_provider.dart';
+import 'package:repolens/providers/theme_provider.dart';
 import 'package:repolens/screens/login_screen.dart';
 import 'package:repolens/screens/register_screen.dart';
 import 'package:repolens/services/auth_service.dart';
@@ -17,8 +18,11 @@ Future<AuthService> _pump(WidgetTester tester, Widget screen) async {
   final service = AuthService(FakeUserRepository());
   await service.ensureDemoUser();
   await tester.pumpWidget(
-    ChangeNotifierProvider(
-      create: (_) => AuthProvider(service),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider(service)),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: MaterialApp(
         home: screen,
         routes: {

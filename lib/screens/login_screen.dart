@@ -59,12 +59,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 24),
-                  const Center(child: AppLogo()),
-                  const SizedBox(height: 16),
+                  const Align(alignment: Alignment.centerRight, child: ThemeToggleButton()),
+                  const SizedBox(height: 8),
+                  const Center(child: AppLogo(size: 88)),
+                  const SizedBox(height: 20),
                   Text('Iniciar sesión',
                       style: theme.textTheme.headlineMedium, textAlign: TextAlign.center),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 6),
+                  Text('Analiza repositorios públicos de GitHub',
+                      style: theme.textTheme.bodyLarge
+                          ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 32),
                   TextFormField(
                     key: const Key('login_email'),
                     controller: _email,
@@ -77,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icon(Icons.email_outlined),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   TextFormField(
                     key: const Key('login_password'),
                     controller: _password,

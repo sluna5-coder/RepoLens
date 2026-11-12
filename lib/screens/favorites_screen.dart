@@ -87,7 +87,7 @@ class FavoritesScreen extends StatelessWidget {
             final favorite = favorites.items[i];
             return Card(
               child: ListTile(
-                leading: const Icon(Icons.star, color: Color(0xFFFFAB00)),
+                leading: const Icon(Icons.star, color: Color(0xFFFFCC00)),
                 title: Text(favorite.fullName),
                 subtitle: Text(
                   favorite.note.isEmpty

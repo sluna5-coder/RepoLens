@@ -62,7 +62,7 @@ void main() {
     }
 
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Análisis recientes'), findsOneWidget); // Inicio
+    expect(find.text('ANÁLISIS RECIENTES'), findsOneWidget); // Inicio
 
     await go('Analizar');
     expect(find.text('Listo para analizar'), findsOneWidget);
@@ -77,7 +77,7 @@ void main() {
     expect(find.text('Cerrar sesión'), findsOneWidget);
 
     await go('Inicio');
-    expect(find.text('Análisis recientes'), findsOneWidget);
+    expect(find.text('ANÁLISIS RECIENTES'), findsOneWidget);
   });
 
   testWidgets('en pantallas anchas (tableta) usa NavigationRail', (tester) async {

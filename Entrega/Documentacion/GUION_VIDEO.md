@@ -16,7 +16,7 @@
 | 3:20 – 3:40 | Inicio → Comparar; escribir dos repos y Comparar | "También puedo comparar dos repositorios lado a lado. La tabla resalta el mejor valor de cada fila." |
 | 3:40 – 4:00 | Activar el modo avión; analizar un repo nuevo; mostrar el error; quitar el modo avión y tocar Reintentar | "Si no hay conexión, la app lo dice y ofrece reintentar. Lo mismo pasa con un repositorio que no existe o cuando se alcanza el límite de peticiones." |
 | 4:00 – 4:15 | Perfil: cambiar a tema oscuro; mostrar el campo del token | "En Perfil se cambia el tema y se puede guardar un token personal de GitHub, que queda cifrado solo en el dispositivo." |
-| 4:15 – 4:30 | Terminal con `flutter test` terminando en "All tests passed!" | "El proyecto tiene 69 pruebas automatizadas que pasan, y `flutter analyze` no reporta problemas. Gracias." |
+| 4:15 – 4:30 | Terminal con `flutter test` terminando en "All tests passed!" | "El proyecto tiene 70 pruebas automatizadas que pasan, y `flutter analyze` no reporta problemas. Gracias." |
 
 ## Consejos de grabación
 

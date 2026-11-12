@@ -330,7 +330,8 @@ class _AlertsCard extends StatelessWidget {
           style: TextStyle(color: scheme.onErrorContainer, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          'Archivos sensibles: ${alerts.join(', ')}',
+          'Archivos sensibles: ${alerts.take(3).join(', ')}'
+          '${alerts.length > 3 ? ' y ${alerts.length - 3} más' : ''}',
           style: TextStyle(color: scheme.onErrorContainer),
         ),
       ),
@@ -544,7 +545,7 @@ class _HealthTab extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         check.passed ? Icons.check_circle : Icons.cancel,
-                        color: check.passed ? const Color(0xFF2E7D32) : theme.colorScheme.error,
+                        color: check.passed ? AppColors.of(context).green : theme.colorScheme.error,
                       ),
                       title: Text(check.label),
                       trailing: Text(
@@ -557,9 +558,9 @@ class _HealthTab extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             if (result.alerts.isEmpty)
-              const Card(
+              Card(
                 child: ListTile(
-                  leading: Icon(Icons.verified_user, color: Color(0xFF2E7D32)),
+                  leading: Icon(Icons.verified_user, color: AppColors.of(context).green),
                   title: Text('Sin alertas de seguridad'),
                   subtitle: Text('No se encontraron archivos sensibles.'),
                 ),
@@ -601,8 +602,9 @@ class _StructureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -632,7 +634,7 @@ class _StructureCard extends StatelessWidget {
                     avatar: Icon(
                       s.present ? Icons.check_circle : Icons.remove_circle_outline,
                       size: 18,
-                      color: s.present ? const Color(0xFF2E7D32) : theme.colorScheme.outline,
+                      color: s.present ? AppColors.of(context).green : theme.colorScheme.onSurfaceVariant,
                     ),
                     label: Text(s.label),
                   ),

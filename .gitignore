@@ -61,3 +61,4 @@ local.properties
 
 # La APK de entrega pesa ~53 MB: no se versiona (se adjunta aparte o como Release)
 Entrega/Aplicacion/*.apk
+.playwright-mcp/

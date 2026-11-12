@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-/// Color según la puntuación de salud: verde, ámbar o rojo.
+import '../core/theme.dart';
+import '../providers/theme_provider.dart';
+
+/// Color según la puntuación de salud: verde, naranja o rojo.
 Color healthColor(int score) {
-  if (score >= 70) return const Color(0xFF2E7D32);
-  if (score >= 40) return const Color(0xFFF9A825);
-  return const Color(0xFFC62828);
+  if (score >= 70) return AppColors.dark.green;
+  if (score >= 40) return AppColors.dark.orange;
+  return AppColors.dark.red;
 }
 
 /// Indicador circular con la puntuación de salud al centro.
@@ -27,14 +31,27 @@ class HealthGauge extends StatelessWidget {
           children: [
             CircularProgressIndicator(
               value: score / 100,
-              strokeWidth: size / 10,
+              strokeWidth: size / 12,
+              strokeCap: StrokeCap.round,
               color: color,
-              backgroundColor: color.withValues(alpha: 0.2),
+              backgroundColor: color.withValues(alpha: 0.18),
             ),
             Center(
-              child: Text(
-                '$score',
-                style: TextStyle(fontSize: size / 3.2, fontWeight: FontWeight.bold),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$score',
+                    style: TextStyle(
+                      fontSize: size / 3.4,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                  Text('de 100',
+                      style: TextStyle(
+                          fontSize: size / 11, color: AppColors.of(context).secondaryLabel)),
+                ],
               ),
             ),
           ],
@@ -53,14 +70,16 @@ class HealthBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      width: 44,
+      height: 28,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: healthColor(score),
-        borderRadius: BorderRadius.circular(12),
+        color: healthColor(score).withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         '$score',
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: TextStyle(color: healthColor(score), fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -79,14 +98,22 @@ class StatTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: theme.colorScheme.primary),
-            const SizedBox(height: 4),
-            Text(value, style: theme.textTheme.titleMedium),
-            Text(label, style: theme.textTheme.bodySmall, textAlign: TextAlign.center),
+            Icon(icon, color: theme.colorScheme.primary, size: 22),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(value,
+                    style: theme.textTheme.headlineSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
+                Text(label, style: theme.textTheme.bodySmall),
+              ],
+            ),
           ],
         ),
       ),
@@ -122,15 +149,111 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: scheme.primary,
-        borderRadius: BorderRadius.circular(size / 4),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF5AC8FA), Color(0xFF0A84FF), Color(0xFF5E5CE6)],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.2237),
       ),
-      child: Icon(Icons.travel_explore, size: size * 0.6, color: scheme.onPrimary),
+      child: Icon(Icons.travel_explore, size: size * 0.56, color: Colors.white),
+    );
+  }
+}
+
+/// Icono blanco dentro de un cuadro redondeado de color, como en los
+/// ajustes del teléfono.
+class IconBadge extends StatelessWidget {
+  const IconBadge({super.key, required this.icon, required this.color, this.size = 30});
+
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(size * 0.24),
+      ),
+      child: Icon(icon, color: Colors.white, size: size * 0.6),
+    );
+  }
+}
+
+/// Sección agrupada: título pequeño arriba y una tarjeta con las filas
+/// separadas por líneas finas.
+class GroupedSection extends StatelessWidget {
+  const GroupedSection({super.key, this.title, required this.children, this.footer});
+
+  final String? title;
+  final List<Widget> children;
+  final String? footer;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+              child: Text(
+                title!.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  letterSpacing: 0.3,
+                  color: colors.secondaryLabel,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          Card(
+            margin: EdgeInsets.zero,
+            child: Column(
+              children: [
+                for (var i = 0; i < children.length; i++) ...[
+                  if (i > 0) const Divider(indent: 16),
+                  children[i],
+                ],
+              ],
+            ),
+          ),
+          if (footer != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+              child: Text(footer!,
+                  style: TextStyle(fontSize: 12.5, color: colors.secondaryLabel)),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Botón de sol y luna que alterna entre el tema claro y el oscuro.
+class ThemeToggleButton extends StatelessWidget {
+  const ThemeToggleButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>();
+    final dark = theme.isDark(context);
+    return IconButton(
+      key: const Key('theme_toggle'),
+      tooltip: dark ? 'Usar tema claro' : 'Usar tema oscuro',
+      icon: Icon(dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+      onPressed: () => theme.toggle(context),
     );
   }
 }

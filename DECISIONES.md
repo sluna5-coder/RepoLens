@@ -69,6 +69,14 @@ Motivo: con repos pequeños o con el proyecto dentro de una subcarpeta, el infor
 - Comprobado en el navegador: login con el usuario de prueba y análisis de `sluna5-coder/rick-morty`.
 - La APK pasó de 52.9 MB a 57.6 MB por la nueva dependencia. No se probó en el emulador después de este cambio porque estaba cerrado.
 
+## Mejora: diseño limpio con tema oscuro por defecto (2026-11-12)
+- **Estilo**: inspirado en las apps de iOS sin copiar fuentes ni iconos de Apple. Fondo negro (oscuro) o gris muy claro (claro), tarjetas agrupadas, un solo acento azul, verde, naranja y rojo del sistema para estados, títulos grandes y radios de 12 a 14 px. Todo está en `lib/core/theme.dart` (`AppColors` y `AppTheme`).
+- **Tema oscuro por defecto**: `ThemeProvider` arranca en oscuro si no hay preferencia guardada. Botón de sol y luna en Inicio y en Login; en Perfil siguen las tres opciones (sistema, claro, oscuro).
+- **Componentes nuevos**: `IconBadge` (icono en cuadro de color), `GroupedSection` (lista agrupada con título) y `ThemeToggleButton`.
+- **Alertas de seguridad**: se ignoran los archivos dentro de carpetas de pruebas (`test`, `testing`, `fixtures`...), porque ahí suelen estar llaves falsas. Si hay más de tres alertas se muestran tres y "y N más".
+- **README**: encabezado centrado con logo, insignias y capturas que cambian según el tema de GitHub (`<picture>`). Las capturas están en `docs/screenshots/` y se tomaron de la versión web a 390 × 844.
+- Pruebas: 70 aprobadas.
+
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
    - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.

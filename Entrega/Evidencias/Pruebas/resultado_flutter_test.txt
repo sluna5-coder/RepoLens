@@ -8,66 +8,67 @@
 00:00 +6: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Puntuación de salud cada criterio resta sus puntos: sin licencia y commit viejo = 65
 00:00 +7: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Puntuación de salud build arma el informe con stack, salud y alertas
 00:00 +8: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo detecta el stack en subcarpetas y por herramientas
-00:00 +9: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo en Flutter no repite las plataformas de la plantilla
-00:00 +10: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo sin archivos de configuración usa las extensiones
-00:00 +11: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo reporta archivos sensibles en subcarpetas con su ruta
-00:00 +12: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo calcula estructura, prácticas y recomendaciones
-00:00 +13: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo README y .gitignore dentro de la carpeta del proyecto
-00:00 +14: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo sin árbol no hay análisis de estructura
+00:00 +9: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
+00:00 +10: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
+00:00 +11: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
+00:00 +12: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
+00:00 +13: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
+00:00 +14: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
 00:00 +15: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña SHA-256 con salt es determinista y coincide con el valor conocido
-00:00 +16: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña el hash cambia con otro salt y nunca contiene la contraseña
-00:00 +17: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService registra, guarda el hash (no la contraseña) e inicia sesión
-00:00 +18: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService no permite emails duplicados
-00:00 +19: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService contraseña incorrecta o usuario inexistente lanza AuthException
-00:00 +20: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService crea el usuario demo una sola vez y cerrar sesión borra la sesión
-00:01 +21: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
-00:02 +22: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
-00:02 +23: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
-00:02 +24: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
-00:02 +24: C:/Users/Colibecas/Documents/RepoLens/test/unit/github_service_test.dart: GithubService con MockClient 404 lanza NotFoundException
-00:02 +25: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
-00:02 +26: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
-00:02 +27: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
-00:02 +28: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
-00:02 +29: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
-00:02 +30: C:/Users/Colibecas/Documents/RepoLens/test/unit/github_service_test.dart: GithubService con MockClient 409 en commits (repo vacío) lanza EmptyRepoException
-00:02 +31: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
-00:02 +32: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
-00:02 +33: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
-00:02 +34: C:/Users/Colibecas/Documents/RepoLens/test/unit/models_test.dart: Parseo de modelos RepoInfo.fromJson lee todos los campos
-00:02 +35: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +36: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +37: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +38: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +39: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +40: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +41: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
-00:02 +42: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: sin conexión y sin caché muestra NoConnectionException
-00:02 +43: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Parser de URL de repositorio acepta https://github.com/owner/repo
-00:02 +44: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: repo inexistente (404) y URL inválida dejan error con mensaje
-00:02 +45: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: repo inexistente (404) y URL inválida dejan error con mensaje
-00:02 +46: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Parser de URL de repositorio acepta la variante con .git
-00:02 +47: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:02 +48: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:02 +49: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:02 +50: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:02 +51: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:03 +52: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:03 +53: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:03 +54: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
-00:03 +55: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Validaciones de registro y login nombre y campos obligatorios
-00:03 +56: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (tearDownAll)
-00:03 +56: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Validaciones de registro y login la nota de favorito admite máximo 300 caracteres
-00:03 +57: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
-00:07 +58: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:07 +59: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:07 +60: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:07 +61: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:08 +62: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:08 +63: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:08 +64: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
-00:09 +65: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro valida nombre, email, contraseña débil y confirmación
-00:09 +66: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: en pantallas anchas (tableta) usa NavigationRail
-00:09 +67: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro no permite registrar un email duplicado
-00:09 +68: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro registro válido crea la cuenta y entra a la app
-00:10 +69: All tests passed!
+00:00 +16: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Árbol completo sin árbol no hay análisis de estructura
+00:00 +17: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña el hash cambia con otro salt y nunca contiene la contraseña
+00:00 +18: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService registra, guarda el hash (no la contraseña) e inicia sesión
+00:00 +19: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService no permite emails duplicados
+00:00 +20: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService contraseña incorrecta o usuario inexistente lanza AuthException
+00:00 +21: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService crea el usuario demo una sola vez y cerrar sesión borra la sesión
+00:01 +22: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
+00:01 +22: C:/Users/Colibecas/Documents/RepoLens/test/unit/github_service_test.dart: GithubService con MockClient fetchAll incluye el árbol completo del repositorio
+00:01 +23: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:01 +24: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:01 +25: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:01 +26: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:01 +27: C:/Users/Colibecas/Documents/RepoLens/test/unit/github_service_test.dart: GithubService con MockClient 403 sin peticiones restantes lanza RateLimitException con la hora de reinicio
+00:01 +28: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +29: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +30: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +31: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +32: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +33: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: favorites: CRUD completo (agregar, consultar, editar nota, eliminar)
+00:01 +34: C:/Users/Colibecas/Documents/RepoLens/test/unit/models_test.dart: Parseo de modelos RepoInfo.fromJson lee todos los campos
+00:01 +35: C:/Users/Colibecas/Documents/RepoLens/test/unit/models_test.dart: Parseo de modelos RepoInfo.fromJson lee todos los campos
+00:01 +36: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +37: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +38: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +39: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +40: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +41: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:01 +42: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:02 +43: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:02 +44: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:02 +45: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: consulta la API, guarda en historial y luego usa la caché
+00:02 +46: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Parser de URL de repositorio acepta la variante con /tree/...
+00:02 +47: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: sin conexión y sin caché muestra NoConnectionException
+00:02 +48: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: sin conexión y sin caché muestra NoConnectionException
+00:02 +49: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Parser de URL de repositorio rechaza URLs inválidas
+00:02 +50: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: repo inexistente (404) y URL inválida dejan error con mensaje
+00:02 +51: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: repo inexistente (404) y URL inválida dejan error con mensaje
+00:02 +52: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: análisis: repo inexistente (404) y URL inválida dejan error con mensaje
+00:02 +53: C:/Users/Colibecas/Documents/RepoLens/test/unit/validators_test.dart: Validaciones de registro y login contraseña débil se rechaza
+00:02 +54: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
+00:02 +55: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
+00:02 +56: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
+00:02 +57: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: cache: una entrada vencida (más de 30 min) no se devuelve
+00:02 +58: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (tearDownAll)
+00:02 +58: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:06 +59: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:06 +60: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:06 +61: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:06 +62: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:07 +63: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:07 +64: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:07 +65: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:08 +66: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro valida nombre, email, contraseña débil y confirmación
+00:08 +67: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: en pantallas anchas (tableta) usa NavigationRail
+00:08 +68: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro no permite registrar un email duplicado
+00:09 +69: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro registro válido crea la cuenta y entra a la app
+00:10 +70: All tests passed!

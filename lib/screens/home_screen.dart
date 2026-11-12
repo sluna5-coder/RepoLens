@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../app.dart';
 import '../core/constants.dart';
+import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/analysis_result.dart';
 import '../models/history_entry.dart';
@@ -35,59 +36,50 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = AppColors.of(context);
     final user = context.watch<AuthProvider>().user;
     final recent = context.watch<HistoryProvider>().entries.take(3).toList();
+    final firstName = (user?.name ?? '').split(' ').first;
 
     final actions = [
-      (Icons.search, 'Analizar repo', 'Pega una URL y obtén el informe', () => onNavigate(1)),
+      (Icons.search, colors.accent, 'Analizar repo', 'Pega una URL y obtén el informe',
+          () => onNavigate(1)),
       (
         Icons.compare_arrows,
+        const Color(0xFF5E5CE6),
         'Comparar',
         'Dos repos lado a lado',
         () => Navigator.pushNamed(context, AppRoutes.compare),
       ),
-      (Icons.history, 'Historial', 'Tus análisis anteriores', () => onNavigate(2)),
-      (Icons.star, 'Favoritos', 'Repos guardados con notas', () => onNavigate(3)),
+      (Icons.history, colors.orange, 'Historial', 'Tus análisis anteriores',
+          () => onNavigate(2)),
+      (Icons.star, const Color(0xFFFFCC00), 'Favoritos', 'Repos guardados con notas',
+          () => onNavigate(3)),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.appName)),
+      appBar: AppBar(
+        title: const Text(AppConstants.appName),
+        actions: const [ThemeToggleButton(), SizedBox(width: 4)],
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         child: MaxWidth(
           maxWidth: 900,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                color: theme.colorScheme.primaryContainer,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      const AppLogo(size: 64),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Hola, ${user?.name ?? ''}',
-                                style: theme.textTheme.titleLarge),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'RepoLens analiza cualquier repositorio público de GitHub: '
-                              'datos clave, lenguajes, commits, salud y alertas de seguridad.',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              Text(
+                firstName.isEmpty ? 'Hola' : 'Hola, $firstName',
+                style: theme.textTheme.headlineMedium,
               ),
-              const SizedBox(height: 16),
-              Text('Funciones', style: theme.textTheme.titleMedium),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
+              Text(
+                'Analiza cualquier repositorio público de GitHub: datos clave, '
+                'lenguajes, commits, salud y alertas de seguridad.',
+                style: theme.textTheme.bodyLarge?.copyWith(color: colors.secondaryLabel),
+              ),
+              const SizedBox(height: 24),
               // LayoutBuilder: 2 columnas en teléfono, 4 en tableta.
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -96,30 +88,36 @@ class HomeScreen extends StatelessWidget {
                     // Alto fijo por tarjeta: evita desbordes con textos grandes.
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: columns,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
                       mainAxisExtent: 148,
                     ),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      for (final (icon, title, subtitle, onTap) in actions)
+                      for (final (icon, color, title, subtitle, onTap) in actions)
                         Card(
-                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.zero,
                           child: InkWell(
                             onTap: onTap,
                             child: Padding(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(icon, size: 32, color: theme.colorScheme.primary),
-                                  const Spacer(),
-                                  Text(title, style: theme.textTheme.titleMedium),
-                                  Text(subtitle,
-                                      style: theme.textTheme.bodySmall,
-                                      maxLines: 2,
+                                  IconBadge(icon: icon, color: color, size: 36),
+                                  const SizedBox(height: 18),
+                                  Text(title,
+                                      style: theme.textTheme.titleMedium,
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis),
+                                  const SizedBox(height: 2),
+                                  Expanded(
+                                    child: Text(subtitle,
+                                        style: theme.textTheme.bodySmall,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
                                 ],
                               ),
                             ),
@@ -129,28 +127,28 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
-              Text('Análisis recientes', style: theme.textTheme.titleMedium),
-              const SizedBox(height: 8),
-              if (recent.isEmpty)
-                const Card(
-                  child: ListTile(
-                    leading: Icon(Icons.inbox_outlined),
-                    title: Text('Aún no has analizado ningún repositorio'),
-                    subtitle: Text('Empieza desde la pestaña Analizar'),
-                  ),
-                )
-              else
-                for (final entry in recent)
-                  Card(
-                    child: ListTile(
-                      leading: HealthBadge(score: entry.healthScore),
-                      title: Text(entry.fullName),
-                      subtitle: Text(Fmt.dateTime(entry.analyzedAt)),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => openHistoryEntry(context, entry),
-                    ),
-                  ),
+              const SizedBox(height: 28),
+              GroupedSection(
+                title: 'Análisis recientes',
+                children: [
+                  if (recent.isEmpty)
+                    const ListTile(
+                      leading: Icon(Icons.inbox_outlined),
+                      title: Text('Aún no has analizado ningún repositorio'),
+                      subtitle: Text('Empieza desde la pestaña Analizar'),
+                    )
+                  else
+                    for (final entry in recent)
+                      ListTile(
+                        leading: HealthBadge(score: entry.healthScore),
+                        title: Text(entry.fullName,
+                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                        subtitle: Text(Fmt.dateTime(entry.analyzedAt)),
+                        trailing: Icon(Icons.chevron_right, color: colors.secondaryLabel),
+                        onTap: () => openHistoryEntry(context, entry),
+                      ),
+                ],
+              ),
             ],
           ),
         ),

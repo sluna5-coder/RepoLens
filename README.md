@@ -1,62 +1,78 @@
+<div align="center">
+
+<img src="assets/icon/icon.png" alt="Logo de RepoLens" width="96" height="96">
+
 # RepoLens
 
-App móvil en **Flutter (Dart)** que genera un informe con la información esencial de cualquier repositorio público de GitHub. El usuario pega la URL del repositorio y RepoLens muestra sus datos generales, lenguajes, commits, archivos, README, una puntuación de salud y alertas de seguridad.
+**El informe esencial de cualquier repositorio público de GitHub, en tu bolsillo.**
 
-No depende de ningún servidor propio: solo consume la API REST pública de GitHub (`https://api.github.com`) y guarda todo localmente en SQLite.
+Pega una URL y obtén datos clave, lenguajes, commits, estructura, salud del proyecto,<br>
+alertas de seguridad y consejos concretos para mejorarlo. Sin servidor propio.
 
-- **Equipo:** [NOMBRE_EQUIPO]
-- **Integrantes:** Saúl Luna Hernández, grupo 5 B · [INTEGRANTES]
-- **Asignatura:** [ASIGNATURA]
-- **Fecha:** [FECHA]
+![Flutter](https://img.shields.io/badge/Flutter-3.47-0A84FF?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.13-0A84FF?logo=dart&logoColor=white)
+![Android](https://img.shields.io/badge/Android-APK-30D158?logo=android&logoColor=white)
+![Web](https://img.shields.io/badge/Web-Chrome-FF9F0A?logo=googlechrome&logoColor=white)
+![Pruebas](https://img.shields.io/badge/pruebas-70%20aprobadas-30D158)
 
-## Capturas
+[Funciones](#funciones) · [Ejecutar](#ejecutar) · [Arquitectura](#arquitectura) · [Documentación](#documentación)
 
-| Inicio | Analizar | Resultado | Salud |
-|---|---|---|---|
-| ![Inicio](Entrega/Evidencias/Capturas/02_inicio.png) | ![Analizar](Entrega/Evidencias/Capturas/05_analizar.png) | ![Resumen](Entrega/Evidencias/Capturas/06_resultado_resumen.png) | ![Salud](Entrega/Evidencias/Capturas/11_resultado_salud.png) |
+<br>
 
-La lista completa de capturas está en `Entrega/Evidencias/Capturas/README.md`.
+<table>
+  <tr>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/inicio-claro.png">
+        <img src="docs/screenshots/inicio-oscuro.png" alt="Pantalla de inicio" width="240">
+      </picture>
+      <br><sub><b>Inicio</b></sub>
+    </td>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/resumen-claro.png">
+        <img src="docs/screenshots/resumen-oscuro.png" alt="Resumen de un repositorio" width="240">
+      </picture>
+      <br><sub><b>Informe</b></sub>
+    </td>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/salud-claro.png">
+        <img src="docs/screenshots/salud-oscuro.png" alt="Puntuación de salud" width="240">
+      </picture>
+      <br><sub><b>Salud</b></sub>
+    </td>
+  </tr>
+</table>
 
-## Funcionalidades
+<sub>Las capturas siguen el tema de GitHub: oscuro o claro.</sub>
 
-- Splash e Inicio con acceso a las funciones principales.
-- Registro e inicio de sesión locales (SQLite, contraseña con SHA-256 + salt), sesión persistente y cierre de sesión.
-- Navegación con `NavigationBar` (teléfono) o `NavigationRail` (tableta): Inicio, Analizar, Historial, Favoritos y Perfil.
-- Análisis de un repositorio en seis pestañas: Resumen, Lenguajes (gráfica de pastel), Commits, Archivos, README (Markdown) y Salud.
-- Análisis propio: detección de stack, puntuación de salud de 0 a 100 con desglose y alertas de archivos sensibles.
-- Comparación de dos repositorios lado a lado.
-- Historial de análisis (consultar, reabrir sin red, eliminar uno, vaciar).
-- Favoritos con nota editable (agregar, consultar, editar, eliminar).
-- Caché de 30 minutos para no rebasar el límite de la API.
-- Token personal de GitHub opcional, guardado en almacenamiento seguro.
-- Tema claro, oscuro o del sistema.
-- Errores con mensaje amable y botón Reintentar: sin conexión, timeout, 404, límite de peticiones, repo vacío, JSON inesperado y base de datos.
+</div>
 
-## Tecnologías
+---
 
-| Tecnología | Uso |
+| | |
 |---|---|
-| Flutter 3.47.6 / Dart 3.13.5 | Framework y lenguaje |
-| `provider` | Gestión de estado (ChangeNotifier) |
-| `http` | Peticiones a la API de GitHub |
-| `sqflite` + `path` | Base de datos SQLite local |
-| `shared_preferences` | Sesión y tema |
-| `flutter_secure_storage` | Token de GitHub |
-| `crypto` | Hash SHA-256 de contraseñas |
-| `fl_chart` | Gráfica de pastel de lenguajes |
-| `flutter_markdown` | Render del README |
-| `connectivity_plus` | Verificación de red |
-| `flutter_launcher_icons` | Icono de la app |
-| `flutter_test`, `http/testing`, `sqflite_common_ffi` | Pruebas |
+| **Equipo** | [NOMBRE_EQUIPO] |
+| **Integrantes** | Saúl Luna Hernández, grupo 5 B · [INTEGRANTES] |
+| **Asignatura** | [ASIGNATURA] |
+| **Fecha** | [FECHA] |
 
-## Requisitos
+## Funciones
 
-- Flutter 3.47.6 o superior (canal estable), Dart 3.13.5.
-- Android SDK 36 (`compileSdk`), con build-tools 36.0.0. `minSdk` y `targetSdk` son los predeterminados de Flutter.
-- JDK 17 o superior (sirve el que incluye Android Studio).
-- Un dispositivo o emulador Android con internet.
+|   |   |
+|---|---|
+| 🔍 **Análisis completo** | Seis pestañas: Resumen, Lenguajes (gráfica), Commits, Archivos, README y Salud. |
+| 🧱 **Estructura real** | Lee todo el árbol del repositorio: stack en subcarpetas, tipos de archivo, archivos más pesados y buenas prácticas (pruebas, CI, Docker, documentación). |
+| 💚 **Salud de 0 a 100** | Siete criterios con desglose y una lista de "Qué mejorar" con consejos concretos. |
+| 🛡️ **Alertas de seguridad** | Detecta archivos sensibles (`.env`, llaves, keystores) en cualquier carpeta. |
+| ⚖️ **Comparar** | Dos repositorios lado a lado; resalta el mejor valor de cada fila. |
+| 🕘 **Historial y favoritos** | Reabre informes sin conexión y guarda repositorios con notas. |
+| 🌗 **Tema oscuro y claro** | Oscuro por defecto; botón de sol y luna en Inicio y opciones en Perfil. |
+| 🔐 **Cuenta local** | Registro e inicio de sesión con SQLite y contraseña con SHA-256 y salt. |
+| ⚡ **Caché y errores claros** | Caché de 30 minutos, botón Actualizar y mensajes para cada falla: sin red, 404, límite de peticiones, repo vacío. |
 
-## Instalación
+## Ejecutar
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -64,32 +80,16 @@ cd RepoLens
 flutter pub get
 ```
 
-## Ejecución
+| Dónde | Cómo |
+|---|---|
+| **Android** (teléfono o emulador) | `flutter run` |
+| **Chrome** | `flutter run -d chrome` |
+| **Visual Studio Code** | *Ejecutar y depurar* (Ctrl+Shift+D) → **RepoLens (Chrome)** o **RepoLens (Android)** → F5 |
 
-En un teléfono o emulador Android:
+**Usuario de prueba** (se crea solo en la primera ejecución): `demo@repolens.app` / `Demo1234`.
 
-```bash
-flutter run
-```
-
-En Chrome:
-
-```bash
-flutter run -d chrome
-```
-
-En Visual Studio Code: abre la carpeta del proyecto, ve a **Ejecutar y depurar** (Ctrl+Shift+D), elige **RepoLens (Chrome)** y pulsa F5. Hace falta la extensión **Flutter**.
-
-En el navegador, SQLite corre como WebAssembly (`web/sqlite3.wasm`) y los datos se guardan en el almacenamiento del navegador.
-
-Pruebas y análisis estático:
-
-```bash
-flutter analyze
-flutter test
-```
-
-## Cómo generar la APK
+<details>
+<summary><b>Generar la APK</b></summary>
 
 ```bash
 flutter build apk --release
@@ -104,32 +104,54 @@ set JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\ruta\corta\temporal
 ```
 
 Para regenerar el icono: `dart run flutter_launcher_icons`.
+</details>
 
-## Usuario de prueba
+<details>
+<summary><b>Pruebas y análisis estático</b></summary>
 
-Se crea solo en la primera ejecución:
+```bash
+flutter analyze
+flutter test
+```
 
-- **Email:** `demo@repolens.app`
-- **Contraseña:** `Demo1234`
+70 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
+</details>
 
-## Token opcional de GitHub
+<details>
+<summary><b>Token opcional de GitHub</b></summary>
 
 Sin token, la API permite 60 peticiones por hora; con token, 5000.
 
-1. En GitHub: *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*. No hace falta ningún permiso extra (solo lectura de repositorios públicos).
+1. En GitHub: *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*. No hace falta ningún permiso extra.
 2. En la app: **Perfil → Token de GitHub → Pegar token personal → Guardar token**.
 
 El token se guarda cifrado solo en el dispositivo con `flutter_secure_storage`. Nunca se escribe en el código ni en el repositorio.
+</details>
 
-## Estructura de carpetas
+<details>
+<summary><b>Requisitos</b></summary>
+
+- Flutter 3.47.6 o superior (canal estable), Dart 3.13.5.
+- Android SDK 36 con build-tools 36.0.0.
+- JDK 17 o superior (sirve el que incluye Android Studio).
+- Para web: Google Chrome. SQLite corre como WebAssembly (`web/sqlite3.wasm`) y los datos se guardan en el navegador.
+</details>
+
+## Arquitectura
+
+```
+Pantallas y widgets  →  Providers (ChangeNotifier)  →  Servicios y repositorios  →  Modelos
+                                                         │                 │
+                                                  API de GitHub        SQLite local
+```
 
 ```
 lib/
-  main.dart                # punto de entrada
+  main.dart                # punto de entrada (SQLite web si corre en el navegador)
   app.dart                 # MaterialApp, providers, temas y rutas
   core/                    # constants, theme, utils, validators, exceptions
-  models/                  # repo_info, language_stat, commit_info, contributor,
-                           # repo_file, analysis_result, user, favorite, history_entry
+  models/                  # repo_info, language_stat, commit_info, contributor, repo_file,
+                           # repo_insights, analysis_result, user, favorite, history_entry
   services/                # github_service, analyzer, auth_service,
                            # connectivity_service, token_service
   data/                    # database_helper y un repositorio por tabla
@@ -137,14 +159,13 @@ lib/
   screens/                 # splash, login, register, main_shell, home, analyze,
                            # result, compare, history, favorites, profile
   widgets/                 # state_views, url_form, common
-test/
-  unit/                    # validators, models, analyzer, github_service, auth, database
-  widget/                  # auth_screens, url_form, navigation
-  mocks/                   # respuestas JSON de ejemplo, MockClient y repositorio falso
+test/                      # unit/, widget/ y mocks/
+web/                       # versión para navegador
 Entrega/                   # APK, documentación, evidencias y bitácora
 ```
 
-## Endpoints usados
+<details>
+<summary><b>Endpoints de la API de GitHub</b></summary>
 
 Todos son `GET` sobre `https://api.github.com`:
 
@@ -156,12 +177,37 @@ Todos son `GET` sobre `https://api.github.com`:
 | `/repos/{owner}/{repo}/contributors?per_page=10` | Contribuidores |
 | `/repos/{owner}/{repo}/contents` | Archivos de la raíz |
 | `/repos/{owner}/{repo}/readme` | README en base64 |
+| `/repos/{owner}/{repo}/git/trees/{rama}?recursive=1` | Árbol completo del repositorio |
+</details>
+
+<details>
+<summary><b>Tecnologías</b></summary>
+
+| Tecnología | Uso |
+|---|---|
+| Flutter 3.47.6 / Dart 3.13.5 | Framework y lenguaje |
+| `provider` | Gestión de estado |
+| `http` | Peticiones a la API de GitHub |
+| `sqflite`, `sqflite_common_ffi_web`, `path` | SQLite en Android y en el navegador |
+| `shared_preferences` | Sesión y tema |
+| `flutter_secure_storage` | Token de GitHub |
+| `crypto` | Hash SHA-256 de contraseñas |
+| `fl_chart` | Gráfica de lenguajes |
+| `flutter_markdown` | Render del README |
+| `connectivity_plus` | Verificación de red |
+| `flutter_launcher_icons` | Iconos de la app |
+| `flutter_test`, `http/testing`, `sqflite_common_ffi` | Pruebas |
+</details>
 
 ## Documentación
 
-- `Entrega/Documentacion/DocumentoTecnico.md`: documento técnico completo.
-- `Entrega/Evidencias/Pruebas/MatrizPruebas.md`: matriz de pruebas.
-- `Entrega/Bitacora/BitacoraDesarrollo.md`: bitácora de desarrollo.
-- `GUIA_DEFENSA.md`: guía de estudio para la exposición.
-- `GUION_VIDEO.md`: guion del video de demostración.
-- `DECISIONES.md`: decisiones tomadas y problemas de entorno.
+| Documento | Contenido |
+|---|---|
+| [`DocumentoTecnico.md`](Entrega/Documentacion/DocumentoTecnico.md) | Documento técnico completo |
+| [`MatrizPruebas.md`](Entrega/Evidencias/Pruebas/MatrizPruebas.md) | Matriz de pruebas |
+| [`BitacoraDesarrollo.md`](Entrega/Bitacora/BitacoraDesarrollo.md) | Bitácora de desarrollo |
+| [`GUIA_DEFENSA.md`](GUIA_DEFENSA.md) | Guía de estudio para la exposición |
+| [`GUION_VIDEO.md`](GUION_VIDEO.md) | Guion del video de demostración |
+| [`DECISIONES.md`](DECISIONES.md) | Decisiones tomadas y problemas de entorno |
+
+<div align="center"><sub>Hecho con Flutter · Datos de la API pública de GitHub</sub></div>

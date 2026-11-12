@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../app.dart';
 import '../core/constants.dart';
+import '../core/theme.dart';
 import '../core/utils.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
@@ -153,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: ListTile(
                   leading: Icon(
                     _hasToken ? Icons.key : Icons.key_off,
-                    color: _hasToken ? const Color(0xFF2E7D32) : null,
+                    color: _hasToken ? AppColors.of(context).green : null,
                   ),
                   title: Text(_hasToken ? 'Token configurado' : 'Sin token'),
                   trailing: _hasToken
