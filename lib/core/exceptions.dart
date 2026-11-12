@@ -81,3 +81,9 @@ class InvalidUrlException extends AppException {
   const InvalidUrlException()
       : super('URL inválida. Usa el formato https://github.com/owner/repo');
 }
+
+/// La respuesta de la API supera el tamaño máximo aceptado (10 MB).
+class ResponseTooLargeException extends AppException {
+  const ResponseTooLargeException()
+      : super('La respuesta de GitHub es demasiado grande para procesarla (más de 10 MB).');
+}

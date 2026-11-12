@@ -12,7 +12,8 @@ class DatabaseHelper {
   static const String _dbName = 'repolens.db';
 
   /// Versión del esquema. Al subirla se ejecuta [_onUpgrade].
-  static const int dbVersion = 1;
+  /// v2: tabla `sessions` (token de sesión aleatorio en lugar del id).
+  static const int dbVersion = 2;
 
   Database? _db;
 
@@ -70,12 +71,21 @@ class DatabaseHelper {
         json TEXT NOT NULL,
         fetched_at TEXT NOT NULL
       )''');
+    await _createSessions(db);
   }
 
-  /// Migraciones entre versiones del esquema. En la versión 1 no hay ninguna;
-  /// las futuras se agregan aquí con `if (oldVersion < N) { ... }`.
+  /// Sesiones abiertas: hash SHA-256 del token guardado en el dispositivo.
+  static Future<void> _createSessions(Database db) => db.execute('''
+      CREATE TABLE IF NOT EXISTS sessions (
+        token_hash TEXT PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at TEXT NOT NULL
+      )''');
+
+  /// Migraciones entre versiones del esquema, con `if (oldVersion < N) { ... }`.
   /// La caché es desechable, así que siempre se limpia al migrar.
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) await _createSessions(db);
     await db.delete('cache');
   }
 }

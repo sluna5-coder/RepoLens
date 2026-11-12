@@ -43,13 +43,18 @@ class RepoLensApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<TokenService>(create: (_) => TokenService()),
+        // Al crearse borra el token global de la versión anterior.
+        Provider<TokenService>(create: (_) => TokenService()..deleteLegacy()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()..load()),
         ChangeNotifierProvider(create: (_) => AuthProvider(AuthService(UserRepository()))),
         ChangeNotifierProvider(
           create: (ctx) => AnalysisProvider(
-            // El servicio lee el token en cada petición desde el almacén seguro.
-            github: GithubService(tokenProvider: ctx.read<TokenService>().read),
+            // El servicio lee en cada petición el token del usuario con sesión
+            // activa; sin sesión no se envía ningún token.
+            github: GithubService(tokenProvider: () async {
+              final id = ctx.read<AuthProvider>().user?.id;
+              return id == null ? null : ctx.read<TokenService>().read(id);
+            }),
             cache: CacheRepository(),
             history: HistoryRepository(),
             connectivity: ConnectivityService(),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../core/constants.dart';
 import '../core/readme_formatter.dart';
 import '../core/theme.dart';
+import '../core/url_policy.dart';
 import '../core/utils.dart';
 import '../core/validators.dart';
 import '../models/analysis_result.dart';
@@ -490,63 +492,153 @@ class _FilesTab extends StatelessWidget {
 }
 
 /// Pestaña README: Markdown renderizado con flutter_markdown.
-class _ReadmeTab extends StatelessWidget {
+///
+/// El README se recorta y se formatea una sola vez (no en cada build) y en
+/// móvil fuera del hilo de la interfaz con `compute`.
+class _ReadmeTab extends StatefulWidget {
   const _ReadmeTab(this.result);
   final AnalysisResult result;
 
   @override
+  State<_ReadmeTab> createState() => _ReadmeTabState();
+}
+
+class _ReadmeTabState extends State<_ReadmeTab> with AutomaticKeepAliveClientMixin {
+  Future<({String text, bool truncated})>? _formatted;
+  late final ReadmeFormatter _formatter = ReadmeFormatter(
+    fullName: widget.result.repo.fullName,
+    branch: widget.result.repo.defaultBranch,
+  );
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    final readme = widget.result.readme;
+    if (readme != null && readme.trim().isNotEmpty) {
+      // Convierte el HTML de GitHub a Markdown y vuelve absolutas las rutas.
+      final args = [widget.result.repo.fullName, widget.result.repo.defaultBranch, readme];
+      _formatted = kIsWeb ? Future(() => formatReadme(args)) : compute(formatReadme, args);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final readme = result.readme;
-    if (readme == null || readme.trim().isEmpty) {
+    super.build(context);
+    final formatted = _formatted;
+    if (formatted == null) {
       return const EmptyState(
         icon: Icons.description_outlined,
         title: 'Sin README',
         message: 'Este repositorio no tiene un archivo README.',
       );
     }
-    // Convierte el HTML de GitHub a Markdown y vuelve absolutas las rutas.
-    final formatter = ReadmeFormatter(
-      fullName: result.repo.fullName,
-      branch: result.repo.defaultBranch,
-    );
-    return MaxWidth(
-      maxWidth: 900,
-      child: Markdown(
-        data: formatter.format(readme),
-        padding: const EdgeInsets.all(16),
-        onTapLink: (_, href, _) => _openLink(context, href),
-        sizedImageBuilder: (config) => _ReadmeImage(
-          uri: config.uri.hasScheme
-              ? config.uri
-              : Uri.parse(formatter.resolveImage(config.uri.toString())),
-          width: config.width,
-          height: config.height,
-        ),
-      ),
+    return FutureBuilder<({String text, bool truncated})>(
+      future: formatted,
+      builder: (context, snapshot) {
+        final data = snapshot.data;
+        if (data == null) {
+          return snapshot.hasError
+              ? const EmptyState(
+                  icon: Icons.description_outlined,
+                  title: 'README no disponible',
+                  message: 'No se pudo preparar el README para mostrarlo.',
+                )
+              : const LoadingView(message: 'Preparando README...');
+        }
+        return MaxWidth(
+          maxWidth: 900,
+          child: Column(
+            children: [
+              if (data.truncated)
+                const ListTile(
+                  dense: true,
+                  leading: Icon(Icons.content_cut),
+                  title: Text('README recortado'),
+                  subtitle: Text('Es muy largo: solo se muestran los primeros 200 KB.'),
+                ),
+              Expanded(
+                child: Markdown(
+                  data: data.text,
+                  padding: const EdgeInsets.all(16),
+                  onTapLink: (_, href, _) => _openLink(context, href),
+                  sizedImageBuilder: (config) => _ReadmeImage(
+                    uri: config.uri.hasScheme
+                        ? config.uri
+                        : Uri.parse(_formatter.resolveImage(config.uri.toString())),
+                    width: config.width,
+                    height: config.height,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
 /// Abre un enlace del README en el navegador. Solo acepta http, https y
-/// mailto; los anclas internas (#seccion) se ignoran.
+/// mailto; los anclas internas (#seccion) se ignoran. Si el destino no es
+/// GitHub se muestra antes el host real, porque el texto del enlace puede
+/// decir otra cosa.
 Future<void> _openLink(BuildContext context, String? href) async {
   final uri = href == null ? null : Uri.tryParse(href);
   if (uri == null || !const {'http', 'https', 'mailto'}.contains(uri.scheme)) return;
+  if (!UrlPolicy.isGithubLink(uri)) {
+    final target = uri.scheme == 'mailto' ? uri.path : uri.host;
+    final confirmed = await confirmDialog(
+      context,
+      title: 'Abrir enlace externo',
+      message: 'Este enlace lleva a $target, fuera de GitHub. ¿Quieres abrirlo?',
+      confirmLabel: 'Abrir',
+    );
+    if (!confirmed) return;
+  }
   final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
   if (!opened && context.mounted) showSnack(context, 'No se pudo abrir el enlace');
 }
 
 /// Imagen del README: PNG, JPG, GIF o SVG, con el tamaño pedido en el HTML.
-/// Si no carga, no ocupa espacio.
-class _ReadmeImage extends StatelessWidget {
+/// Si no carga, no ocupa espacio. Solo se cargan solas las de hosts de
+/// confianza ([UrlPolicy.isTrustedImage]); las demás esperan un toque.
+class _ReadmeImage extends StatefulWidget {
   const _ReadmeImage({required this.uri, this.width, this.height});
   final Uri uri;
   final double? width;
   final double? height;
 
   @override
+  State<_ReadmeImage> createState() => _ReadmeImageState();
+}
+
+class _ReadmeImageState extends State<_ReadmeImage> {
+  late bool _load = UrlPolicy.isTrustedImage(widget.uri);
+
+  @override
   Widget build(BuildContext context) {
+    final uri = widget.uri;
+    final width = widget.width;
+    final height = widget.height;
     if (!uri.scheme.startsWith('http')) return const SizedBox.shrink();
+    if (!_load) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: OutlinedButton.icon(
+          onPressed: () => setState(() => _load = true),
+          icon: const Icon(Icons.image_outlined),
+          label: Text('Imagen externa · tocar para cargar\n${uri.host}',
+              textAlign: TextAlign.center),
+        ),
+      );
+    }
+    // Decodifica la imagen al tamaño en que se muestra (máximo 1200 px)
+    // para que una imagen enorme no agote la memoria.
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final cacheWidth = ((width ?? 420).clamp(1, 420) * dpr).round().clamp(1, 1200);
     final url = uri.toString();
     final path = uri.path.toLowerCase();
     final isSvg = path.endsWith('.svg') ||
@@ -563,7 +655,10 @@ class _ReadmeImage extends StatelessWidget {
             placeholderBuilder: (_) => hidden,
           )
         : Image.network(url,
-            width: width, height: height, errorBuilder: (_, _, _) => hidden);
+            width: width,
+            height: height,
+            cacheWidth: cacheWidth,
+            errorBuilder: (_, _, _) => hidden);
     // Capturas grandes: no más anchas que un teléfono, centradas.
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),

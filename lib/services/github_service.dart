@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../core/constants.dart';
@@ -49,6 +51,7 @@ class GithubService {
     http.Client? client,
     this.tokenProvider,
     this.timeout = AppConstants.timeout,
+    this.maxResponseBytes = AppConstants.maxResponseBytes,
   }) : _client = client ?? http.Client();
 
   final http.Client _client;
@@ -57,6 +60,9 @@ class GithubService {
   /// petición para que un token recién guardado aplique de inmediato.
   final Future<String?> Function()? tokenProvider;
   final Duration timeout;
+
+  /// Tamaño máximo aceptado de una respuesta, en bytes.
+  final int maxResponseBytes;
 
   /// GET /repos/{owner}/{repo}: datos generales.
   Future<RepoInfo> getRepo(String fullName) async {
@@ -185,10 +191,11 @@ class GithubService {
       headers['Authorization'] = 'Bearer $token';
     }
 
+    // Redirecciones: en Android/escritorio dart:io no reenvía Authorization a
+    // otro origen; en web el navegador aplica la misma regla de Fetch.
     final http.Response res;
     try {
-      res = await _client
-          .get(Uri.parse('${AppConstants.apiBase}$path'), headers: headers)
+      res = await _send(Uri.parse('${AppConstants.apiBase}$path'), headers)
           .timeout(timeout);
     } on SocketException {
       throw const NoConnectionException();
@@ -201,7 +208,12 @@ class GithubService {
     switch (res.statusCode) {
       case 200:
         try {
-          return jsonDecode(utf8.decode(res.bodyBytes));
+          // Cuerpos grandes (árboles enormes) se decodifican fuera del hilo
+          // de la interfaz; en web compute corre en el mismo hilo.
+          if (!kIsWeb && res.bodyBytes.length > _computeThreshold) {
+            return await compute(decodeJsonBytes, res.bodyBytes);
+          }
+          return decodeJsonBytes(res.bodyBytes);
         } on FormatException {
           throw const UnexpectedJsonException();
         }
@@ -223,6 +235,27 @@ class GithubService {
       default:
         throw ApiException(res.statusCode);
     }
+  }
+
+  /// A partir de este tamaño el JSON se decodifica con `compute`.
+  static const int _computeThreshold = 512 * 1024;
+
+  /// Envía el GET leyendo el cuerpo por partes: si supera [maxResponseBytes]
+  /// se corta la descarga y se lanza [ResponseTooLargeException].
+  Future<http.Response> _send(Uri uri, Map<String, String> headers) async {
+    final request = http.Request('GET', uri)..headers.addAll(headers);
+    final streamed = await _client.send(request);
+    final declared = streamed.contentLength;
+    if (declared != null && declared > maxResponseBytes) {
+      throw const ResponseTooLargeException();
+    }
+    final bytes = BytesBuilder(copy: false);
+    await for (final chunk in streamed.stream) {
+      bytes.add(chunk);
+      if (bytes.length > maxResponseBytes) throw const ResponseTooLargeException();
+    }
+    return http.Response.bytes(bytes.takeBytes(), streamed.statusCode,
+        headers: streamed.headers, request: streamed.request);
   }
 
   /// Lee X-RateLimit-Reset (segundos desde 1970) y lo convierte a fecha.
@@ -248,3 +281,7 @@ class GithubService {
           .map((e) => fromJson(e as Map<String, dynamic>))
           .toList());
 }
+
+/// Decodifica un cuerpo JSON en UTF-8. Es de nivel superior para usarse con
+/// `compute`.
+dynamic decodeJsonBytes(Uint8List bytes) => jsonDecode(utf8.decode(bytes));

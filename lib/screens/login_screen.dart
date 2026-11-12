@@ -129,17 +129,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
                     child: const Text('¿No tienes cuenta? Regístrate'),
                   ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.science_outlined),
-                      title: const Text('Usuario de prueba'),
-                      subtitle: const Text(
-                          '${AppConstants.demoEmail}\n${AppConstants.demoPassword}'),
-                      isThreeLine: true,
-                      trailing: TextButton(onPressed: _fillDemo, child: const Text('Usar')),
+                  // Usuario de prueba que pide el enunciado.
+                  ...[
+                    const SizedBox(height: 16),
+                    Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.science_outlined),
+                        title: const Text('Usuario de prueba'),
+                        subtitle: const Text(
+                            '${AppConstants.demoEmail}\n${AppConstants.demoPassword}'),
+                        isThreeLine: true,
+                        trailing: TextButton(onPressed: _fillDemo, child: const Text('Usar')),
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

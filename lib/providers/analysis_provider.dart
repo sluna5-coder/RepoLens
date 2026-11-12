@@ -68,10 +68,14 @@ class AnalysisProvider extends ChangeNotifier {
     final data = await _github.fetchAll(fullName);
     final analysis = Analyzer.build(data);
 
-    // 4) Guardar en caché (si falla no se pierde el informe).
-    try {
-      await _cache.put(fullName, jsonEncode(analysis.toJson()));
-    } catch (_) {/* se ignora */}
+    // 4) Guardar en caché (si falla no se pierde el informe). La caché es
+    // compartida por todas las cuentas del dispositivo: los repos privados,
+    // visibles solo con el token de un usuario, no se guardan.
+    if (!analysis.repo.isPrivate) {
+      try {
+        await _cache.put(fullName, jsonEncode(analysis.toJson()));
+      } catch (_) {/* se ignora */}
+    }
     return analysis;
   }
 

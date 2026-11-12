@@ -18,6 +18,7 @@ class RepoInfo {
     required this.updatedAt,
     required this.pushedAt,
     required this.topics,
+    this.isPrivate = false,
   });
 
   final String fullName;
@@ -42,12 +43,17 @@ class RepoInfo {
   final DateTime? pushedAt;
   final List<String> topics;
 
+  /// `true` si el repo es privado (solo visible con un token). Estos informes
+  /// no se guardan en la caché compartida del dispositivo.
+  final bool isPrivate;
+
   /// Construye el modelo a partir del JSON de GitHub.
   factory RepoInfo.fromJson(Map<String, dynamic> json) {
     final owner = (json['owner'] as Map<String, dynamic>?) ?? const {};
     final license = json['license'] as Map<String, dynamic>?;
     return RepoInfo(
       fullName: json['full_name'] as String,
+      isPrivate: json['private'] == true,
       name: json['name'] as String,
       ownerLogin: (owner['login'] as String?) ?? '',
       avatarUrl: (owner['avatar_url'] as String?) ?? '',
@@ -70,6 +76,7 @@ class RepoInfo {
   /// Serializa con la misma forma que la API, para que `fromJson` lo relea.
   Map<String, dynamic> toJson() => {
         'full_name': fullName,
+        'private': isPrivate,
         'name': name,
         'owner': {'login': ownerLogin, 'avatar_url': avatarUrl},
         'html_url': htmlUrl,

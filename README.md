@@ -13,7 +13,7 @@ alertas de seguridad y consejos concretos para mejorarlo. Sin servidor propio.
 ![Dart](https://img.shields.io/badge/Dart-3.13-0A84FF?logo=dart&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-APK-30D158?logo=android&logoColor=white)
 ![Web](https://img.shields.io/badge/Web-Chrome-FF9F0A?logo=googlechrome&logoColor=white)
-![Pruebas](https://img.shields.io/badge/pruebas-77%20aprobadas-30D158)
+![Pruebas](https://img.shields.io/badge/pruebas-97%20aprobadas-30D158)
 
 [Funciones](#funciones) · [Ejecutar](#ejecutar) · [Arquitectura](#arquitectura) · [Documentación](#documentación)
 
@@ -114,7 +114,7 @@ flutter analyze
 flutter test
 ```
 
-77 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
+97 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
 </details>
 
 <details>

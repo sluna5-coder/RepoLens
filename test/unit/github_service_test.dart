@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -104,6 +105,39 @@ void main() {
       );
       final data = await service.fetchAll('octocat/demo');
       expect(data.readme, isNull);
+    });
+    test('una respuesta de más del límite lanza ResponseTooLargeException', () {
+      final big = GithubService(
+        client: statusClient(200, body: '{"x": "${'a' * 200}"}'),
+        maxResponseBytes: 100,
+      );
+      expect(big.getRepo('octocat/demo'), throwsA(isA<ResponseTooLargeException>()));
+      // Justo en el límite sí se acepta.
+      final ok = GithubService(client: statusClient(200, body: repoJson),
+          maxResponseBytes: utf8.encode(repoJson).length);
+      expect(ok.getRepo('octocat/demo'), completes);
+    });
+
+    test('Content-Length mayor que 10 MB se rechaza sin leer el cuerpo', () async {
+      var read = false;
+      final client = MockClient.streaming((request, _) async {
+        final body = Stream<List<int>>.fromIterable([[123]]).map((c) {
+          read = true;
+          return c;
+        });
+        return http.StreamedResponse(body, 200, contentLength: 11 * 1024 * 1024);
+      });
+      await expectLater(GithubService(client: client).getRepo('octocat/demo'),
+          throwsA(isA<ResponseTooLargeException>()));
+      expect(read, isFalse);
+    });
+
+    test('marca el repo como privado según el campo private', () async {
+      final service = GithubService(
+          client: statusClient(200, body: repoJson.replaceFirst('{', '{"private": true,')));
+      expect((await service.getRepo('octocat/demo')).isPrivate, isTrue);
+      expect((await GithubService(client: successClient()).getRepo('octocat/demo')).isPrivate,
+          isFalse);
     });
   });
 }

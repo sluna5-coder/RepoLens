@@ -1,6 +1,6 @@
 # Matriz de pruebas — RepoLens
 
-**Cómo leerla:** la columna "Resultado obtenido" describe lo que se comprobó con las **pruebas automatizadas** (`flutter test`, 77 pruebas, todas aprobadas el 2026-11-11). Las respuestas de la API se simularon con `MockClient` y la base de datos se probó con SQLite real (motor FFI de escritorio). **Ningún caso se ha repetido todavía en un teléfono**: la columna "Evidencia" indica la captura manual que falta agregar.
+**Cómo leerla:** la columna "Resultado obtenido" describe lo que se comprobó con las **pruebas automatizadas** (`flutter test`, 97 pruebas, todas aprobadas el 2026-11-12). Las respuestas de la API se simularon con `MockClient` y la base de datos se probó con SQLite real (motor FFI de escritorio). **Ningún caso se ha repetido todavía en un teléfono**: la columna "Evidencia" indica la captura manual que falta agregar.
 
 | No. | Funcionalidad | Acción realizada | Resultado esperado | Resultado obtenido | Aprobada | Evidencia |
 |---|---|---|---|---|---|---|

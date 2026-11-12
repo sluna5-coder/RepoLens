@@ -1,5 +1,5 @@
 /// Usuario local (tabla `users`). La contraseña nunca se guarda en claro:
-/// solo su hash SHA-256 y el salt usado.
+/// solo su hash (PBKDF2-HMAC-SHA256, o SHA-256 en cuentas antiguas) y el salt.
 class User {
   const User({
     this.id,

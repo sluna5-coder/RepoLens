@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,9 +37,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  /// Id del usuario con sesión activa (el token es de cada cuenta).
+  int? get _userId => context.read<AuthProvider>().user?.id;
+
   /// Solo se consulta si existe un token; su valor nunca se muestra.
   Future<void> _loadToken() async {
-    final token = await context.read<TokenService>().read();
+    final id = _userId;
+    final token = id == null ? null : await context.read<TokenService>().read(id);
     if (mounted) setState(() => _hasToken = token != null && token.isNotEmpty);
   }
 
@@ -48,8 +53,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       showSnack(context, 'Pega un token antes de guardar');
       return;
     }
+    final id = _userId;
+    if (id == null) return;
     try {
-      await context.read<TokenService>().save(value);
+      await context.read<TokenService>().save(id, value);
       _token.clear();
       if (!mounted) return;
       setState(() => _hasToken = true);
@@ -66,8 +73,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       message: 'Volverás al límite de 60 peticiones por hora.',
     );
     if (!confirmed || !mounted) return;
+    final id = _userId;
+    if (id == null) return;
     try {
-      await context.read<TokenService>().delete();
+      await context.read<TokenService>().delete(id);
       if (!mounted) return;
       setState(() => _hasToken = false);
       showSnack(context, 'Token eliminado');
@@ -146,9 +155,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 4),
               Text(
                 'Sin token la API permite 60 peticiones por hora; con token, 5000. '
-                'Se guarda cifrado solo en este dispositivo.',
+                'Se guarda cifrado solo en este dispositivo y solo para tu cuenta.',
                 style: theme.textTheme.bodySmall,
               ),
+              // En web flutter_secure_storage no ofrece un cifrado real.
+              if (kIsWeb) ...[
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.warning_amber_rounded,
+                        size: 18, color: theme.colorScheme.error),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'En el navegador el token no queda cifrado de forma segura. '
+                        'Úsalo solo en un equipo propio.',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 8),
               Card(
                 child: ListTile(

@@ -15,7 +15,8 @@ import '../mocks/fakes.dart';
 /// Monta una pantalla con un AuthProvider respaldado por el repositorio falso.
 Future<AuthService> _pump(WidgetTester tester, Widget screen) async {
   SharedPreferences.setMockInitialValues({});
-  final service = AuthService(FakeUserRepository());
+  // Pocas iteraciones de PBKDF2: el hash se calcula sin isolate en la prueba.
+  final service = AuthService(FakeUserRepository(), iterations: 1000);
   await service.ensureDemoUser();
   await tester.pumpWidget(
     MultiProvider(

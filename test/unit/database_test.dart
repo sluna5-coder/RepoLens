@@ -63,6 +63,18 @@ void main() {
     );
   });
 
+  test('sessions (v2): resuelve el usuario por el hash del token y lo borra', () async {
+    final users = UserRepository();
+    await users.createSession(userId, 'hash-de-token');
+    expect((await users.findBySessionHash('hash-de-token'))?.id, userId);
+    expect(await users.findBySessionHash('otro-hash'), isNull);
+    await users.deleteSession('hash-de-token');
+    expect(await users.findBySessionHash('hash-de-token'), isNull);
+
+    await users.updatePasswordHash(userId, 'pbkdf2\$1000\$abc');
+    expect((await users.findById(userId))?.passwordHash, 'pbkdf2\$1000\$abc');
+  });
+
   test('favorites: CRUD completo (agregar, consultar, editar nota, eliminar)', () async {
     final favorites = FavoritesProvider(FavoriteRepository());
 

@@ -17,6 +17,13 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
+  <!--
+    Content Security Policy. Flutter web necesita 'wasm-unsafe-eval' (CanvasKit
+    y sqlite3.wasm), CanvasKit desde www.gstatic.com y las fuentes de respaldo
+    desde fonts.gstatic.com. Las imágenes de red se descargan con fetch, por eso
+    sus hosts de confianza también van en connect-src.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://api.github.com https://github.com https://raw.githubusercontent.com https://*.githubusercontent.com https://img.shields.io https://badgen.net https://www.gstatic.com https://fonts.gstatic.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Analiza repositorios públicos de GitHub.">
 

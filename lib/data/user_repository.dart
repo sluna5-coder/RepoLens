@@ -25,4 +25,36 @@ class UserRepository {
         final rows = await db.query('users', where: 'id = ?', whereArgs: [id], limit: 1);
         return rows.isEmpty ? null : User.fromJson(rows.first);
       });
+
+  /// Reemplaza el hash de la contraseña (migración de SHA-256 a PBKDF2).
+  Future<void> updatePasswordHash(int id, String hash) => dbGuard(() async {
+        final db = await _helper.database;
+        await db.update('users', {'password_hash': hash}, where: 'id = ?', whereArgs: [id]);
+      });
+
+  /// Registra una sesión. Solo se guarda el hash del token, nunca el token.
+  Future<void> createSession(int userId, String tokenHash) => dbGuard(() async {
+        final db = await _helper.database;
+        await db.insert('sessions', {
+          'token_hash': tokenHash,
+          'user_id': userId,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      });
+
+  /// Usuario dueño de la sesión con ese hash, o `null` si no existe.
+  Future<User?> findBySessionHash(String tokenHash) => dbGuard(() async {
+        final db = await _helper.database;
+        final rows = await db.rawQuery(
+          'SELECT u.* FROM users u JOIN sessions s ON s.user_id = u.id '
+          'WHERE s.token_hash = ? LIMIT 1',
+          [tokenHash],
+        );
+        return rows.isEmpty ? null : User.fromJson(rows.first);
+      });
+
+  Future<void> deleteSession(String tokenHash) => dbGuard(() async {
+        final db = await _helper.database;
+        await db.delete('sessions', where: 'token_hash = ?', whereArgs: [tokenHash]);
+      });
 }
