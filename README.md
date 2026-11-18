@@ -112,7 +112,10 @@ Para regenerar el icono: `dart run flutter_launcher_icons`.
 ```bash
 flutter analyze
 flutter test
+flutter test integration_test/app_test.dart -d <dispositivo>
 ```
+
+La prueba de integración recorre la app completa en un emulador o teléfono (registro, login, análisis, favoritos, historial, errores, comparación, tema y cierre de sesión) con la API de GitHub simulada.
 
 97 pruebas: unitarias (validadores, modelos, analizador, servicio de GitHub, autenticación, SQLite real) y de widgets (login, registro, formulario de URL y navegación).
 </details>

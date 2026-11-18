@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'core/constants.dart';
@@ -37,7 +38,11 @@ class AppRoutes {
 /// Raíz de la app: registra los providers (inyección de dependencias),
 /// los temas claro/oscuro y las rutas.
 class RepoLensApp extends StatelessWidget {
-  const RepoLensApp({super.key});
+  const RepoLensApp({super.key, this.httpClient});
+
+  /// Cliente HTTP para la API de GitHub. `null` en la app real; las pruebas
+  /// de integración pasan un `MockClient` para no depender de la red.
+  final http.Client? httpClient;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +56,7 @@ class RepoLensApp extends StatelessWidget {
           create: (ctx) => AnalysisProvider(
             // El servicio lee en cada petición el token del usuario con sesión
             // activa; sin sesión no se envía ningún token.
-            github: GithubService(tokenProvider: () async {
+            github: GithubService(client: httpClient, tokenProvider: () async {
               final id = ctx.read<AuthProvider>().user?.id;
               return id == null ? null : ctx.read<TokenService>().read(id);
             }),

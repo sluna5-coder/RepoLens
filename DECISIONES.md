@@ -104,6 +104,12 @@ Motivo: muchos README usan HTML (`<p align>`, `<table>`, `<img>`), rutas relativ
 - **Redirecciones con token**: se revisó `package:http`. En Android `IOClient` usa `dart:io`, que no copia `Authorization` al redirigir a otro origen (`shouldCopyHeaderOnRedirect`). En web el navegador aplica la regla de Fetch. No hizo falta cambiar `followRedirects`.
 - Pruebas: 97 aprobadas.
 
+## Pruebas de integración (2026-11-17)
+- `integration_test/app_test.dart` recorre el flujo completo en un emulador Android: registro con errores y válido, login fallido y correcto, análisis de `flutter/flutter` y de un repo pequeño con sus 6 pestañas y alta en favoritos, edición de la nota y eliminación, historial, URL inválida y repo inexistente (404 con Reintentar), comparación y cambio de tema con cierre de sesión.
+- La base de datos, la sesión y la navegación son las reales. La API de GitHub se simula con un `MockClient` (decisión del autor): así la prueba no depende de la red ni gasta el límite de 60 peticiones por hora. Para inyectarlo, `RepoLensApp` acepta un `httpClient` opcional; la app real no lo usa.
+- Resultado real: pasa en el emulador `Medium_Phone` (API 37) en 38 s. La salida de todas las pruebas está en `Entrega/Evidencias/Pruebas/resultado_tests.txt`.
+- Comando: `flutter test integration_test/app_test.dart -d <dispositivo>`.
+
 ## Problemas de entorno encontrados
 1. **Gradle: `java.io.IOException: Unable to establish loopback connection`** (causa: `java.net.SocketException: Invalid argument: connect`). El JDK de Android Studio (JBR 25) no pudo crear sockets de dominio Unix en la carpeta temporal por defecto.
    - Solución: definir antes de compilar `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\Colibecas\.udtmp`. Se creó esa carpeta para esto; se puede borrar cuando ya no se compile.

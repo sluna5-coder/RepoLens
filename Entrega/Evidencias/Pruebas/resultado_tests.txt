@@ -1,0 +1,113 @@
+== flutter test (unitarias y de widget) ==
+00:00 +0: loading C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart
+00:00 +0: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña PBKDF2-HMAC-SHA256 coincide con los vectores de prueba conocidos
+00:00 +1: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña el hash lleva el prefijo de formato y se verifica
+00:00 +2: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Detección de stack reconoce cada tecnología por su archivo de la raíz
+00:00 +3: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña el hash cambia con otro salt
+00:00 +4: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Detección de stack combina varias tecnologías sin duplicar e ignora carpetas
+00:00 +5: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Hash de contraseña el hash antiguo SHA-256 se sigue verificando
+00:00 +6: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Alertas de seguridad detecta archivos sensibles por nombre y por extensión
+00:00 +7: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Alertas de seguridad detecta archivos sensibles por nombre y por extensión
+00:00 +8: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService migra un hash antiguo SHA-256 a PBKDF2 al iniciar sesión
+00:00 +9: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService migra un hash antiguo SHA-256 a PBKDF2 al iniciar sesión
+00:00 +10: C:/Users/Colibecas/Documents/RepoLens/test/unit/analyzer_test.dart: Puntuación de salud repo completo obtiene 100
+00:00 +11: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +12: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +13: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +14: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +15: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +16: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +17: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +18: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +19: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +20: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +21: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +22: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService con muchas iteraciones el hash se calcula en otro isolate (compute)
+00:00 +23: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService no permite emails duplicados
+00:00 +24: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService contraseña incorrecta o usuario inexistente lanza AuthException
+00:00 +25: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService tras cada fallo la espera crece (1 s, 2 s, 4 s) y un acierto la reinicia
+00:01 +26: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: AuthService crea el usuario demo una sola vez y cerrar sesión borra la sesión
+00:01 +27: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Sesión por token guarda un token aleatorio en el dispositivo y solo su hash en la BD
+00:01 +28: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Sesión por token un token alterado o el id antiguo en prefs no abren sesión
+00:01 +29: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Sesión por token iniciar sesión otra vez invalida la sesión anterior del dispositivo
+00:01 +30: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Token de GitHub por usuario cada cuenta lee solo su propio token
+00:01 +31: C:/Users/Colibecas/Documents/RepoLens/test/unit/auth_test.dart: Token de GitHub por usuario el token global antiguo se borra y no se asigna a nadie
+00:02 +32: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter convierte <img> con ruta relativa en imagen Markdown absoluta
+00:02 +33: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter las imágenes de una tabla HTML salen una por una
+00:02 +34: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter encabezados, enlaces y saltos de línea HTML
+00:02 +35: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter resuelve rutas relativas en la sintaxis Markdown
+00:02 +36: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter <picture> conserva solo la imagen principal
+00:03 +37: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter no toca el HTML dentro de bloques de código
+00:03 +38: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter convierte enlaces blob de GitHub a archivos crudos
+00:03 +39: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter codifica la rama por segmento en las URLs
+00:03 +40: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter quita comentarios HTML, incluso uno sin cerrar
+00:03 +41: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter recorta un README muy largo y lo indica
+00:03 +42: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +43: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +44: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +45: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +46: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +47: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +48: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:03 +49: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +50: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +51: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +52: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +53: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +54: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +55: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +56: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +57: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +58: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +59: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +60: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +61: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +62: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:04 +63: C:/Users/Colibecas/Documents/RepoLens/test/unit/readme_formatter_test.dart: ReadmeFormatter un README malicioso de 200 KB se formatea rápido (sin ReDoS)
+00:05 +64: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
+00:05 +65: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
+00:05 +66: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: (setUpAll)
+00:06 +66: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +67: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +68: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +69: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +70: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +71: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +72: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +73: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +74: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +75: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +76: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +77: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +78: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: users: inserta, consulta y rechaza email duplicado (UNIQUE)
+00:06 +79: C:/Users/Colibecas/Documents/RepoLens/test/unit/database_test.dart: sessions (v2): resuelve el usuario por el hash del token y lo borra
+00:06 +80: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:07 +81: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:08 +82: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:08 +83: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:08 +84: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:08 +85: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de login campos vacíos muestran mensajes de obligatorio
+00:11 +86: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:12 +87: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:13 +88: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:13 +89: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:13 +90: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:14 +91: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:14 +92: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:14 +93: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:15 +94: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: la barra inferior navega entre las cinco secciones
+00:15 +95: C:/Users/Colibecas/Documents/RepoLens/test/widget/auth_screens_test.dart: Pantalla de registro registro válido crea la cuenta y entra a la app
+00:16 +96: C:/Users/Colibecas/Documents/RepoLens/test/widget/navigation_test.dart: en pantallas anchas (tableta) usa NavigationRail
+00:16 +97: All tests passed!
+
+== flutter test integration_test/app_test.dart -d emulator-5554 ==
+00:00 +0: loading C:/Users/Colibecas/Documents/RepoLens/integration_test/app_test.dart
+Running Gradle task 'assembleDebug'...                          
+
+Running Gradle task 'assembleDebug'...                             48.8s
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...        1,023ms
+00:00 +0: (setUpAll)
+00:00 +0: flujo completo de RepoLens
+00:37 +1: (tearDownAll)
+00:38 +1: All tests passed!
