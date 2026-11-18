@@ -7,7 +7,7 @@
 | **Proyecto** | RepoLens: informe esencial de repositorios públicos de GitHub |
 | **Asignatura** | [ASIGNATURA] |
 | **Equipo** | [NOMBRE_EQUIPO] |
-| **Integrantes** | Saúl Luna Hernández, grupo 5 B · [INTEGRANTES] |
+| **Integrantes** | Saúl Luna Hernández, Emmanuel Alejandro, Gustavo Ceja Quintero, Pedro Andrés Aguilar y Jorge Luis Pizano Saucedo (grupo 5 B) |
 | **Fecha** | [FECHA] |
 | **Tecnología** | Flutter (Dart) para Android |
 

@@ -21,7 +21,7 @@ Registro de las decisiones tomadas sin consultar y del estado del trabajo.
 
 ### Pendiente para el autor
 - Probar la APK en el teléfono, tomar las capturas y grabar el video.
-- Llenar los marcadores `[NOMBRE_EQUIPO]`, `[INTEGRANTES]`, `[ASIGNATURA]` y `[FECHA]`.
+- Llenar los marcadores `[NOMBRE_EQUIPO]`, `Saúl Luna Hernández, Emmanuel Alejandro, Gustavo Ceja Quintero, Pedro Andrés Aguilar y Jorge Luis Pizano Saucedo`, `[ASIGNATURA]` y `[FECHA]`.
 - Corregir `git config user.email` (hoy es `tu-correo@ejemplo.com`) y subir a GitHub.
 
 ## Decisiones de diseño

@@ -3,7 +3,7 @@ REPOLENS - CARPETA DE ENTREGA
 
 Proyecto final de desarrollo movil multiplataforma.
 Equipo: [NOMBRE_EQUIPO]
-Integrantes: Saul Luna Hernandez, grupo 5 B. [INTEGRANTES]
+Integrantes: Saul Luna Hernandez, grupo 5 B. Saúl Luna Hernández, Emmanuel Alejandro, Gustavo Ceja Quintero, Pedro Andrés Aguilar y Jorge Luis Pizano Saucedo
 Asignatura: [ASIGNATURA]
 Fecha: [FECHA]
 

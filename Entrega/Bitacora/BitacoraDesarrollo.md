@@ -1,7 +1,7 @@
 # Bitácora de desarrollo — RepoLens
 
 - **Equipo:** [NOMBRE_EQUIPO]
-- **Integrantes:** Saúl Luna Hernández, grupo 5 B · [INTEGRANTES]
+- **Integrantes:** Saúl Luna Hernández, Emmanuel Alejandro, Gustavo Ceja Quintero, Pedro Andrés Aguilar y Jorge Luis Pizano Saucedo (grupo 5 B)
 - **Asignatura:** [ASIGNATURA]
 - **Fecha de entrega:** [FECHA]
 

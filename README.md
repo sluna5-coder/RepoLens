@@ -15,6 +15,8 @@ alertas de seguridad y consejos concretos para mejorarlo. Sin servidor propio.
 ![Web](https://img.shields.io/badge/Web-Chrome-FF9F0A?logo=googlechrome&logoColor=white)
 ![Pruebas](https://img.shields.io/badge/pruebas-97%20aprobadas-30D158)
 
+**[Abrir la app web](https://sluna5-coder.github.io/RepoLens/)** · **[Descargar la APK](https://sluna5-coder.github.io/RepoLens/RepoLens.apk)**
+
 [Funciones](#funciones) · [Ejecutar](#ejecutar) · [Arquitectura](#arquitectura) · [Documentación](#documentación)
 
 <br>
@@ -54,9 +56,18 @@ alertas de seguridad y consejos concretos para mejorarlo. Sin servidor propio.
 | | |
 |---|---|
 | **Equipo** | [NOMBRE_EQUIPO] |
-| **Integrantes** | Saúl Luna Hernández, grupo 5 B · [INTEGRANTES] |
+| **Integrantes** | Saúl Luna Hernández, Emmanuel Alejandro, Gustavo Ceja Quintero, Pedro Andrés Aguilar y Jorge Luis Pizano Saucedo (grupo 5 B) |
 | **Asignatura** | [ASIGNATURA] |
 | **Fecha** | [FECHA] |
+
+## Pruébala
+
+| Web (cualquier dispositivo) | APK (Android) |
+|:---:|:---:|
+| <img src="docs/qr/qr-web.png" width="180" alt="QR de la app web"> | <img src="docs/qr/qr-apk.png" width="180" alt="QR de la APK"> |
+| [sluna5-coder.github.io/RepoLens](https://sluna5-coder.github.io/RepoLens/) | [RepoLens.apk](https://sluna5-coder.github.io/RepoLens/RepoLens.apk) |
+
+Usuario de prueba: `demo@repolens.app` / `Demo1234`. Para instalar la APK, Android pide permitir apps de origen desconocido.
 
 ## Funciones
 
@@ -212,5 +223,6 @@ Todos son `GET` sobre `https://api.github.com`:
 | [`GUIA_DEFENSA.md`](GUIA_DEFENSA.md) | Guía de estudio para la exposición |
 | [`GUION_VIDEO.md`](GUION_VIDEO.md) | Guion del video de demostración |
 | [`DECISIONES.md`](DECISIONES.md) | Decisiones tomadas y problemas de entorno |
+| [`RepoLens.pptx`](Entrega/Presentacion/RepoLens.pptx) | Presentación para la exposición |
 
 <div align="center"><sub>Hecho con Flutter · Datos de la API pública de GitHub</sub></div>
